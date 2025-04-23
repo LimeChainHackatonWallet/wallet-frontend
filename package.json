@@ -10,8 +10,9 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@solana/web3.js": "^1.98.1",
+    "@simplewebauthn/browser": "^13.1.0",
     "@tailwindcss/vite": "^4.1.4",
+    "gill": "^0.8.2",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "tailwindcss": "^4.1.4"
