@@ -294,6 +294,11 @@
     "@jridgewell/resolve-uri" "^3.1.0"
     "@jridgewell/sourcemap-codec" "^1.4.14"
 
+"@noble/ed25519@^2.2.3":
+  version "2.2.3"
+  resolved "https://registry.npmjs.org/@noble/ed25519/-/ed25519-2.2.3.tgz"
+  integrity sha512-iHV8eI2mRcUmOx159QNrU8vTpQ/Xm70yJ2cTk3Trc86++02usfqFoNl6x0p3JN81ZDS/1gx6xiK0OwrgqCT43g==
+
 "@nodelib/fs.scandir@2.1.5":
   version "2.1.5"
   resolved "https://registry.npmjs.org/@nodelib/fs.scandir/-/fs.scandir-2.1.5.tgz"
@@ -709,6 +714,13 @@
     "@solana/keys" "2.1.0"
     "@solana/rpc-types" "2.1.0"
     "@solana/transaction-messages" "2.1.0"
+
+"@solana/webcrypto-ed25519-polyfill@^2.1.0":
+  version "2.1.0"
+  resolved "https://registry.npmjs.org/@solana/webcrypto-ed25519-polyfill/-/webcrypto-ed25519-polyfill-2.1.0.tgz"
+  integrity sha512-ZixHs7mIuPeeRPnqnmGe+5bjyZkWUOxl5nwcEH34fVivhYh2Tg+n+kdqm/qp9hq2tfLGy3ajQVOJ0YGTNyvD4w==
+  dependencies:
+    "@noble/ed25519" "^2.2.3"
 
 "@tailwindcss/node@4.1.4":
   version "4.1.4"

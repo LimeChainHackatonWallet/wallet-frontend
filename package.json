@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@simplewebauthn/browser": "^13.1.0",
+    "@solana/webcrypto-ed25519-polyfill": "^2.1.0",
     "@tailwindcss/vite": "^4.1.4",
     "gill": "^0.8.2",
     "react": "^19.0.0",
