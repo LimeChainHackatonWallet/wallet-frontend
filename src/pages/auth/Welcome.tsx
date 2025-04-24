@@ -10,7 +10,7 @@ import {
 } from "../../components/ui/card";
 import { Separator } from "../../components/ui/separator";
 import { Skeleton } from "../../components/ui/skeleton";
-import { ArrowRight, DollarSign, CreditCard, Send } from "lucide-react";
+import { ArrowRight, DollarSign, CreditCard, Send, Shield } from "lucide-react";
 
 const Welcome = () => {
   const [isLoading, setIsLoading] = React.useState(false);
@@ -32,48 +32,60 @@ const Welcome = () => {
   };
 
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-b from-slate-50 to-white p-4 md:p-8">
+    <div className="flex min-h-screen flex-col items-center justify-center p-4 md:p-8">
       <div className="w-full max-w-md space-y-8">
         {isLoading ? (
           <LoadingState />
         ) : (
           <>
             <div className="flex flex-col items-center space-y-4 text-center">
-              <div className="rounded-full bg-slate-100 p-4">
-                <DollarSign className="h-10 w-10 text-slate-600" />
+              <div className="rounded-full bg-primary/20 p-4">
+                <DollarSign className="h-10 w-10 text-primary" />
               </div>
-              <h1 className="text-3xl font-bold tracking-tight text-slate-900">
+              <h1 className="text-3xl font-bold tracking-tight text-foreground">
                 CryptoWallet
               </h1>
-              <p className="text-slate-500">
-                A simple and intuitive wallet for your daily financial needs
+              <p className="text-muted-foreground">
+                Everyday finance, powered by blockchain technology
+              </p>
+              <p className="text-xs text-muted-foreground/70 max-w-xs">
+                Secured by advanced crypto technology, with the simplicity of
+                traditional banking
               </p>
             </div>
 
-            <Card className="border-slate-100 shadow-md">
+            <Card className="border-border bg-card shadow-lg">
               <CardHeader>
-                <CardTitle>Key Features</CardTitle>
+                <CardTitle className="text-card-foreground">
+                  Key Features
+                </CardTitle>
                 <CardDescription>
-                  Everything you need for your daily financial activities
+                  Blockchain-powered solutions for your daily financial needs
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
                 <FeatureItem
-                  icon={<Send className="h-5 w-5 text-slate-500" />}
+                  icon={<Send className="h-5 w-5 text-primary" />}
                   title="Send & Receive Money"
-                  description="Instantly transfer funds to friends and family"
+                  description="Instantly transfer funds using secure blockchain technology"
                 />
-                <Separator className="my-2" />
+                <Separator className="my-2 bg-border" />
                 <FeatureItem
-                  icon={<DollarSign className="h-5 w-5 text-slate-500" />}
-                  title="Buy Currency"
-                  description="Purchase digital currency directly in the app"
+                  icon={<DollarSign className="h-5 w-5 text-primary" />}
+                  title="Buy Cryptocurrency"
+                  description="Seamlessly purchase digital assets that work like cash"
                 />
-                <Separator className="my-2" />
+                <Separator className="my-2 bg-border" />
                 <FeatureItem
-                  icon={<CreditCard className="h-5 w-5 text-slate-500" />}
-                  title="Online Purchases"
-                  description="Use your wallet for seamless online shopping"
+                  icon={<CreditCard className="h-5 w-5 text-primary" />}
+                  title="Crypto-Powered Payments"
+                  description="Shop online with the security of blockchain technology"
+                />
+                <Separator className="my-2 bg-border" />
+                <FeatureItem
+                  icon={<Shield className="h-5 w-5 text-primary" />}
+                  title="Bank-Level Security"
+                  description="Protected by the same blockchain technology trusted by institutions"
                 />
               </CardContent>
               <CardFooter className="flex flex-col space-y-3">
@@ -82,7 +94,7 @@ const Welcome = () => {
                   onClick={handleCreateAccount}
                   disabled={isLoading}
                 >
-                  Create Account
+                  Create Wallet Account
                   <ArrowRight className="h-4 w-4" />
                 </Button>
                 <Button
@@ -111,10 +123,10 @@ interface FeatureItemProps {
 const FeatureItem = ({ icon, title, description }: FeatureItemProps) => {
   return (
     <div className="flex items-start space-x-3">
-      <div className="rounded-full bg-slate-50 p-2">{icon}</div>
+      <div className="rounded-full bg-secondary p-2">{icon}</div>
       <div>
-        <h3 className="font-medium text-slate-900">{title}</h3>
-        <p className="text-sm text-slate-500">{description}</p>
+        <h3 className="font-medium text-card-foreground">{title}</h3>
+        <p className="text-sm text-muted-foreground">{description}</p>
       </div>
     </div>
   );
@@ -124,23 +136,24 @@ const LoadingState = () => {
   return (
     <div className="space-y-8">
       <div className="flex flex-col items-center space-y-4">
-        <Skeleton className="h-16 w-16 rounded-full" />
-        <Skeleton className="h-8 w-48" />
-        <Skeleton className="h-4 w-64" />
+        <Skeleton className="h-16 w-16 rounded-full bg-muted" />
+        <Skeleton className="h-8 w-48 bg-muted" />
+        <Skeleton className="h-4 w-64 bg-muted" />
       </div>
-      <Card>
+      <Card className="bg-card border-border">
         <CardHeader>
-          <Skeleton className="h-6 w-36" />
-          <Skeleton className="h-4 w-full" />
+          <Skeleton className="h-6 w-36 bg-muted" />
+          <Skeleton className="h-4 w-full bg-muted" />
         </CardHeader>
         <CardContent className="space-y-6">
-          <Skeleton className="h-12 w-full" />
-          <Skeleton className="h-12 w-full" />
-          <Skeleton className="h-12 w-full" />
+          <Skeleton className="h-12 w-full bg-muted" />
+          <Skeleton className="h-12 w-full bg-muted" />
+          <Skeleton className="h-12 w-full bg-muted" />
+          <Skeleton className="h-12 w-full bg-muted" />
         </CardContent>
         <CardFooter className="flex flex-col space-y-3">
-          <Skeleton className="h-10 w-full" />
-          <Skeleton className="h-10 w-full" />
+          <Skeleton className="h-10 w-full bg-muted" />
+          <Skeleton className="h-10 w-full bg-muted" />
         </CardFooter>
       </Card>
     </div>
