@@ -1,17 +1,17 @@
 import React, { useState } from 'react';
-import { registerWithPasskey } from '../../features/auth/Register';
-import { generateSolanaKeyPair } from '../../features/wallet/keyPairGeneration';
+import loginWithPasskey from '../../features/auth/loginWithPasskey';
+
 
 
 export default function Login() {
 
     const handleLogin = async () => {
-        // code here
+        loginWithPasskey();
     }
 
     return (
         <div>
-            <button onClick={handleLogin}>Register</button>
+            <button onClick={handleLogin}>Login</button>
         </div>
     )
 }

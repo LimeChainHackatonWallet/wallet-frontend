@@ -1,7 +1,5 @@
 import React, { useState } from 'react';
-import { generateSolanaKeyPair } from '../../features/wallet/keyPairGeneration';
-import registerWithPasskey from '../../features/auth/UserRegistration';
-
+import registerWithPasskey from '../../features/auth/registerWithPasskey';
 
 
 export default function Register() {

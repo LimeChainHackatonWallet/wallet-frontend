@@ -21,6 +21,7 @@ export const generateRegistrationOptions = () => {
     timeout: 60000,
     authenticatorSelection: {
       userVerification: "preferred",
+      authenticatorAttachment: "platform"
     },
     attestation: "none" as AttestationConveyancePreference, // 👈 FIX: tell TS this is valid
   };
