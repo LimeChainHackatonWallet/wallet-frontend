@@ -1,0 +1,3 @@
+{
+    "default_applications": ["http://localhost:5173/manifest.json"]
+}

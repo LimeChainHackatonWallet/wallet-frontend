@@ -12,7 +12,7 @@ import { Separator } from "../components/ui/separator";
 import { ArrowRight, DollarSign, CreditCard, Send, Shield } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
 import { LoadingState } from "../components/LoadingState";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import registerWithPasskey from "@/features/auth/registerWithPasskey";
 import loginWithPasskey from "@/features/auth/loginWithPasskey";
 import { Logo } from "@/components/ui/logo";
@@ -20,32 +20,54 @@ import { Logo } from "@/components/ui/logo";
 const Register = () => {
   const [isLoading, setIsLoading] = React.useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
   const { login } = useAuth();
+
+  const getRedirectPath = () => {
+    const searchParams = new URLSearchParams(location.search);
+    const redirectPath = searchParams.get("redirect");
+    return redirectPath || "/"; // Default to home if no redirect is specified
+  };
 
   const handleCreateAccount = async () => {
     setIsLoading(true);
-    const wallet = await registerWithPasskey();
-    if (!wallet) {
-      return;
+    try {
+      const wallet = await registerWithPasskey();
+      if (!wallet) {
+        setIsLoading(false);
+        return;
+      }
+      login({
+        address: wallet.address,
+        keyPair: wallet.keyPair,
+      });
+
+      // Navigate to the redirect path or default to home
+      navigate(getRedirectPath());
+    } catch (error) {
+      console.error("Registration error:", error);
+      setIsLoading(false);
     }
-    login({
-      address: wallet.address,
-      keyPair: wallet.keyPair,
-    });
-    navigate("/");
   };
 
   const handleLogin = async () => {
     setIsLoading(true);
-    const wallet = await loginWithPasskey();
-    if (!wallet) {
-      return;
+    try {
+      const wallet = await loginWithPasskey();
+      if (!wallet) {
+        setIsLoading(false);
+        return;
+      }
+      login({
+        address: wallet.address,
+        keyPair: wallet.keyPair,
+      });
+
+      navigate(getRedirectPath());
+    } catch (error) {
+      console.error("Login error:", error);
+      setIsLoading(false);
     }
-    login({
-      address: wallet.address,
-      keyPair: wallet.keyPair,
-    });
-    navigate("/");
   };
 
   return (

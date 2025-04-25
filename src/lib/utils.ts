@@ -28,3 +28,9 @@ export function formatAddress(
 
   return `${start}....${end}`;
 }
+
+export function uint8ArrayToHexString(bytes: Uint8Array): string {
+  return Array.from(bytes)
+    .map(byte => byte.toString(16).padStart(2, '0')) // Ensure 2-digit hex
+    .join('');
+}
