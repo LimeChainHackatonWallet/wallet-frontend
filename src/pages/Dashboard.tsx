@@ -4,10 +4,12 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const Dashboard = () => {
   const { user, logout } = useAuth();
   const [balance] = useState(1250.75);
+  const navigate = useNavigate();
 
   const handleLogout = () => {
     logout();
@@ -74,6 +76,7 @@ const Dashboard = () => {
         <Button
           variant="outline"
           className="flex flex-col items-center justify-center gap-2 p-4 h-24"
+          onClick={() => navigate('/buy')}
         >
           <Plus className="h-6 w-6" />
           <span className="text-sm font-medium">Buy</span>
