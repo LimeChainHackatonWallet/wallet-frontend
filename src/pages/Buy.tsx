@@ -2,11 +2,10 @@ import { useAuth } from "@/context/AuthContext";
 import { LogOut, ArrowLeft } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { MoonPayBuyWidget } from '@moonpay/moonpay-react';
+import { MoonPayBuyWidget } from "@moonpay/moonpay-react";
 import { useNavigate } from "react-router-dom";
 
-
-const Dashboard = () => {
+const Buy = () => {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
 
@@ -18,7 +17,7 @@ const Dashboard = () => {
     <div className="flex flex-col max-w-md mx-auto p-4 space-y-6">
       {/* Header with user info */}
       <div className="flex justify-between items-center">
-        <Button variant="outline" size="icon" onClick={() => navigate('/')}>
+        <Button variant="outline" size="icon" onClick={() => navigate("/")}>
           <ArrowLeft className="h-5 w-5" />
         </Button>
         <div className="flex items-center gap-3">
@@ -52,4 +51,4 @@ const Dashboard = () => {
   );
 };
 
-export default Dashboard;
+export default Buy;
