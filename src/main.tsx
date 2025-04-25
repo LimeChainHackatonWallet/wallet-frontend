@@ -33,7 +33,7 @@ const router = createBrowserRouter([
       },
       {
         path: "pay",
-        element: <ProtectedRoute><Pay /></ProtectedRoute>, // TODO: how to login and redirect; maybe remove protected?
+        element: <ProtectedRoute><Pay /></ProtectedRoute>,
       },
       {
         path: 'register',

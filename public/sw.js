@@ -93,5 +93,5 @@ self.addEventListener("message", (e) => {
   } else {
     paymentRequestResolver.reject(e.data);
   }
-  paymentRequestEvent = null; // TODO: remove if not works
+  paymentRequestEvent = null;
 });
