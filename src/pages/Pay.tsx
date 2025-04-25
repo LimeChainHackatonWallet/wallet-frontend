@@ -3,6 +3,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { useEffect, useState } from 'react';
 import { signBytes, getUtf8Encoder } from 'gill';
+import { formatAddress, uint8ArrayToHexString } from "@/lib/utils";
 
 type MethodData = {
   data: {
@@ -26,14 +27,17 @@ const Pay = () => {
   const [paymentData, setPaymentData] = useState<PaymentData | null>(null);
 
   async function sign(message: string) {
+    if (!user) {
+      throw new Error("User is not authenticated")
+    }
     const uint8Array = getUtf8Encoder().encode(message);
-    // TODO: user is empty
-    const signature = await signBytes(user.keyPair.privateKey, uint8Array)
+    const signature = await signBytes(user.keyPair.privateKey, uint8Array);
+    
     const paymentAppResponse = {
       methodName: "WalletSign",
       details: {
-        signature: signature, // TODO: sign
-        message: "asd",
+        signature: uint8ArrayToHexString(signature),
+        message: message,
       },
     };
 
@@ -44,6 +48,9 @@ const Pay = () => {
   }
 
   function pay() {
+    if (!user) {
+      throw new Error("User is not authenticated")
+    }
     const paymentAppResponse = {
       methodName: "WalletPayment",
       details: {
@@ -92,7 +99,7 @@ const Pay = () => {
       <code>{message}</code><br></br>
       <Button onClick={() => sign(message)}>Sign</Button>
     </div>
-  } else if (type === "payment") {
+  } else if (type === "payment") { // TODO: not tested for now
     form = 
     <div>
       <p>The website {paymentData.origin} requested payment of</p>
@@ -108,20 +115,24 @@ const Pay = () => {
     </div>
   }
 
+  if (!user) {
+    return <div>Loading...</div>;
+  }
+
   return (
     <div className="flex flex-col max-w-md mx-auto p-4 space-y-6">
       {/* Header with user info */}
       <div className="flex justify-between items-center">
         <div className="flex items-center gap-3">
           <Avatar className="h-10 w-10 border border-primary/20">
-            <AvatarImage src={`https://avatar.vercel.sh/${user?.username}`} />
+            <AvatarImage src={`https://avatar.vercel.sh/${user.address}`} />
             <AvatarFallback className="bg-primary/10 text-primary">
               {user?.address?.substring(0, 2).toUpperCase() || "U"}
             </AvatarFallback>
           </Avatar>
           <div>
             <p className="font-medium">Welcome</p>
-            <h2 className="text-xl font-bold">{user?.address}</h2>
+            <h2 className="text-xl font-bold">{formatAddress(user.address)}</h2>
           </div>
         </div>
       </div>
