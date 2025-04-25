@@ -13,36 +13,38 @@ import { ArrowRight, DollarSign, CreditCard, Send, Shield } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
 import { LoadingState } from "../components/LoadingState";
 import { useNavigate } from "react-router-dom";
+import registerWithPasskey from "@/features/auth/registerWithPasskey";
+import loginWithPasskey from "@/features/auth/loginWithPasskey";
 
 const Register = () => {
   const [isLoading, setIsLoading] = React.useState(false);
-  const { login } = useAuth();
   const navigate = useNavigate();
+  const { login } = useAuth();
 
-  const handleCreateAccount = () => {
+  const handleCreateAccount = async () => {
     setIsLoading(true);
-    setTimeout(() => {
-      setIsLoading(false);
-      // Create a mock user and log them in
-      login({
-        id: "user-" + Math.random().toString(36).substr(2, 9),
-        username: "New User",
-      });
-    }, 1000);
+    const wallet = await registerWithPasskey();
+    if (!wallet) {
+      return;
+    }
+    login({
+      address: wallet.address,
+      keyPair: wallet.keyPair,
+    });
     navigate("/");
   };
 
-  const handleLogin = () => {
+  const handleLogin = async () => {
     setIsLoading(true);
-    setTimeout(() => {
-      setIsLoading(false);
-      // Log in with a mock user
-      login({
-        id: "existing-user-123",
-        username: "Existing User",
-      });
-      navigate("/");
-    }, 1000);
+    const wallet = await loginWithPasskey();
+    if (!wallet) {
+      return;
+    }
+    login({
+      address: wallet.address,
+      keyPair: wallet.keyPair,
+    });
+    navigate("/");
   };
 
   return (

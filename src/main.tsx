@@ -11,6 +11,11 @@ import Dashboard from './pages/Dashboard'
 import ProtectedRoute from './components/ProtectedRoute'
 import { MoonPayProvider } from '@moonpay/moonpay-react';
 
+// Browsers do not support WebCrypto API for ed255519 key generation
+// This provides support for it
+import { install } from '@solana/webcrypto-ed25519-polyfill';
+install(); // patches WebCrypto for Ed25519 support
+
 const router = createBrowserRouter([
   {
     path: "/",
