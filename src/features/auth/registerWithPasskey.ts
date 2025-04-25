@@ -29,7 +29,7 @@ export default async function registerWithPasskey() {
       const wallet = await generateSolanaKeyPair(fullSecretKey);
       console.log("Registration successful, wallet:", wallet);
 
-      return wallet.address;
+      return wallet;
     }
   } catch (err) {
     console.error("Passkey registration failed:", err);

@@ -23,18 +23,26 @@ const Register = () => {
 
   const handleCreateAccount = async () => {
     setIsLoading(true);
-    const address = await registerWithPasskey();
+    const wallet = await registerWithPasskey();
+    if (!wallet) {
+      return;
+    }
     login({
-      address: address as string,
+      address: wallet.address,
+      keyPair: wallet.keyPair,
     });
     navigate("/");
   };
 
   const handleLogin = async () => {
     setIsLoading(true);
-    const address = await loginWithPasskey();
+    const wallet = await loginWithPasskey();
+    if (!wallet) {
+      return;
+    }
     login({
-      address: address as string,
+      address: wallet.address,
+      keyPair: wallet.keyPair,
     });
     navigate("/");
   };

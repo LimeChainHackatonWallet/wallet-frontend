@@ -26,7 +26,7 @@ export default async function loginWithPasskey() {
       const wallet = await generateSolanaKeyPair(fullSecretKey);
       console.log("Login successful, wallet:", wallet);
 
-      return wallet.address;
+      return wallet;
     }
   } catch (err) {
     console.error("Passkey login failed:", err);
