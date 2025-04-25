@@ -1,5 +1,5 @@
 import React from "react";
-import { Button } from "../../components/ui/button";
+import { Button } from "../components/ui/button";
 import {
   Card,
   CardContent,
@@ -7,27 +7,41 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "../../components/ui/card";
-import { Separator } from "../../components/ui/separator";
-import { Skeleton } from "../../components/ui/skeleton";
+} from "../components/ui/card";
+import { Separator } from "../components/ui/separator";
 import { ArrowRight, DollarSign, CreditCard, Send, Shield } from "lucide-react";
+import { useAuth } from "@/context/AuthContext";
+import { LoadingState } from "../components/LoadingState";
+import { useNavigate } from "react-router-dom";
 
-const Welcome = () => {
+const Register = () => {
   const [isLoading, setIsLoading] = React.useState(false);
+  const { login } = useAuth();
+  const navigate = useNavigate();
 
   const handleCreateAccount = () => {
     setIsLoading(true);
     setTimeout(() => {
       setIsLoading(false);
-      // Navigation logic will be added later
+      // Create a mock user and log them in
+      login({
+        id: "user-" + Math.random().toString(36).substr(2, 9),
+        username: "New User",
+      });
     }, 1000);
+    navigate("/");
   };
 
   const handleLogin = () => {
     setIsLoading(true);
     setTimeout(() => {
       setIsLoading(false);
-      // Navigation logic will be added later
+      // Log in with a mock user
+      login({
+        id: "existing-user-123",
+        username: "Existing User",
+      });
+      navigate("/");
     }, 1000);
   };
 
@@ -132,32 +146,4 @@ const FeatureItem = ({ icon, title, description }: FeatureItemProps) => {
   );
 };
 
-const LoadingState = () => {
-  return (
-    <div className="space-y-8">
-      <div className="flex flex-col items-center space-y-4">
-        <Skeleton className="h-16 w-16 rounded-full bg-muted" />
-        <Skeleton className="h-8 w-48 bg-muted" />
-        <Skeleton className="h-4 w-64 bg-muted" />
-      </div>
-      <Card className="bg-card border-border">
-        <CardHeader>
-          <Skeleton className="h-6 w-36 bg-muted" />
-          <Skeleton className="h-4 w-full bg-muted" />
-        </CardHeader>
-        <CardContent className="space-y-6">
-          <Skeleton className="h-12 w-full bg-muted" />
-          <Skeleton className="h-12 w-full bg-muted" />
-          <Skeleton className="h-12 w-full bg-muted" />
-          <Skeleton className="h-12 w-full bg-muted" />
-        </CardContent>
-        <CardFooter className="flex flex-col space-y-3">
-          <Skeleton className="h-10 w-full bg-muted" />
-          <Skeleton className="h-10 w-full bg-muted" />
-        </CardFooter>
-      </Card>
-    </div>
-  );
-};
-
-export default Welcome;
+export default Register;
