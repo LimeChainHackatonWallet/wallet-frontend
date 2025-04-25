@@ -25,8 +25,7 @@ const Register = () => {
     setIsLoading(true);
     const address = await registerWithPasskey();
     login({
-      id: address as string,
-      username: "New User",
+      address: address as string,
     });
     navigate("/");
   };
@@ -35,8 +34,7 @@ const Register = () => {
     setIsLoading(true);
     const address = await loginWithPasskey();
     login({
-      id: address as string,
-      username: "New User",
+      address: address as string,
     });
     navigate("/");
   };

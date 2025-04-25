@@ -5,6 +5,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { formatAddress } from "@/lib/utils";
 
 const Dashboard = () => {
   const { user, logout } = useAuth();
@@ -14,6 +15,10 @@ const Dashboard = () => {
   const handleLogout = () => {
     logout();
   };
+
+  if (!user) {
+    return <div>Loading...</div>;
+  }
 
   const formatCurrency = (amount: number) => {
     return new Intl.NumberFormat("en-US", {
@@ -29,14 +34,14 @@ const Dashboard = () => {
       <div className="flex justify-between items-center">
         <div className="flex items-center gap-3">
           <Avatar className="h-10 w-10 border border-primary/20">
-            <AvatarImage src={`https://avatar.vercel.sh/${user?.username}`} />
+            <AvatarImage src={`https://avatar.vercel.sh/${user?.address}`} />
             <AvatarFallback className="bg-primary/10 text-primary">
-              {user?.username?.substring(0, 2).toUpperCase() || "U"}
+              {user?.address?.substring(0, 2).toUpperCase() || "U"}
             </AvatarFallback>
           </Avatar>
           <div>
             <p className="font-medium">Welcome</p>
-            <h2 className="text-xl font-bold">{user?.username}</h2>
+            <h2 className="text-xl font-bold">{formatAddress(user.address)}</h2>
           </div>
         </div>
         <Button variant="outline" size="icon" onClick={handleLogout}>
@@ -76,7 +81,7 @@ const Dashboard = () => {
         <Button
           variant="outline"
           className="flex flex-col items-center justify-center gap-2 p-4 h-24"
-          onClick={() => navigate('/buy')}
+          onClick={() => navigate("/buy")}
         >
           <Plus className="h-6 w-6" />
           <span className="text-sm font-medium">Buy</span>
