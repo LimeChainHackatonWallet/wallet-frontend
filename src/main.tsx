@@ -6,8 +6,10 @@ import Register from './pages/Register'
 import NotFoundPage from './pages/not-found'
 import { AuthProvider } from './context/AuthContext'
 import Layout from './components/layout/Layout'
+import Buy from './pages/Buy'
 import Dashboard from './pages/Dashboard'
 import ProtectedRoute from './components/ProtectedRoute'
+import { MoonPayProvider } from '@moonpay/moonpay-react';
 
 const router = createBrowserRouter([
   {
@@ -20,6 +22,10 @@ const router = createBrowserRouter([
         element: <ProtectedRoute><Dashboard /></ProtectedRoute>,
       },
       {
+        path: "buy",
+        element: <ProtectedRoute><Buy /></ProtectedRoute>,
+      },
+      {
         path: 'register',
         element: <Register />
       }
@@ -30,7 +36,9 @@ const router = createBrowserRouter([
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <AuthProvider>
-      <RouterProvider router={router} />
+      <MoonPayProvider apiKey="pk_test_sFMO7I90RPndu9SRvkcEcoKSa2DPUW5" debug>
+        <RouterProvider router={router} />
+      </MoonPayProvider>
     </AuthProvider>
   </StrictMode>
 );
