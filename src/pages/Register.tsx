@@ -15,6 +15,7 @@ import { LoadingState } from "../components/LoadingState";
 import { useNavigate } from "react-router-dom";
 import registerWithPasskey from "@/features/auth/registerWithPasskey";
 import loginWithPasskey from "@/features/auth/loginWithPasskey";
+import { Logo } from "@/components/ui/logo";
 
 const Register = () => {
   const [isLoading, setIsLoading] = React.useState(false);
@@ -54,14 +55,14 @@ const Register = () => {
           <LoadingState />
         ) : (
           <>
-            <div className="flex flex-col items-center space-y-4 text-center">
-              <div className="rounded-full bg-primary/20 p-4">
-                <DollarSign className="h-10 w-10 text-primary" />
+            <div className="flex flex-col items-center space-y-3 text-center">
+              <div className="rounded-full">
+                <Logo />
               </div>
-              <h1 className="text-3xl font-bold tracking-tight text-foreground">
-                CryptoWallet
+              <h1 className="text-4xl font-bold tracking-tight text-foreground">
+                PassChain
               </h1>
-              <p className="text-muted-foreground">
+              <p className="text-muted-foreground text-sm">
                 Everyday finance, powered by blockchain technology
               </p>
               <p className="text-xs text-muted-foreground/70 max-w-xs">
