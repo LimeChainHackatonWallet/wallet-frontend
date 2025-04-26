@@ -37,8 +37,6 @@ const Pay = () => {
     const signatures = await user.keyPairSigner.signMessages([signableMessage]);
     const signature = signatures[0][user.keyPairSigner.address];
 
-    const verify = await verifySignature(user.keyPairSigner.keyPair.publicKey, signature, uint8ArrayMessage)
-    console.log(321, verify)
     const paymentAppResponse = {
       methodName: "WalletSign",
       details: {
@@ -132,7 +130,7 @@ const Pay = () => {
       <div className="flex justify-between items-center">
         <div className="flex items-center gap-3">
           <Avatar className="h-10 w-10 border border-primary/20">
-            <AvatarImage src={`https://avatar.vercel.sh/${user.address}`} />
+            <AvatarImage src={`https://avatar.vercel.sh/${user.keyPairSigner.address}`} />
             <AvatarFallback className="bg-primary/10 text-primary">
               {user?.keyPairSigner.address?.substring(0, 2).toUpperCase() || "U"}
             </AvatarFallback>
