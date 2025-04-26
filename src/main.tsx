@@ -41,12 +41,13 @@ const router = createBrowserRouter([
             path: "send",
             element: <Send />,
           },
+          {
+            path: "pay",
+            element: <ProtectedRoute><Pay /></ProtectedRoute>,
+          },
         ]
       },
-      {
-        path: "pay",
-        element: <ProtectedRoute><Pay /></ProtectedRoute>,
-      },
+      
       {
         path: 'register',
         element: <Register />
