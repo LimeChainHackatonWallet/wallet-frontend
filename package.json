@@ -10,6 +10,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@esbuild-plugins/node-globals-polyfill": "^0.2.3",
     "@hookform/resolvers": "^5.0.1",
     "@moonpay/moonpay-js": "^0.6.6",
     "@moonpay/moonpay-react": "^1.8.11",
@@ -22,11 +23,13 @@
     "@radix-ui/react-slot": "^1.2.0",
     "@radix-ui/react-tabs": "^1.1.9",
     "@simplewebauthn/browser": "^13.1.0",
+    "@solana-program/token": "^0.5.1",
     "@solana/spl-token": "^0.4.13",
     "@solana/web3.js": "^1.98.2",
     "@solana/webcrypto-ed25519-polyfill": "^2.1.0",
     "@tailwindcss/vite": "^4.1.4",
     "bip39": "^3.1.0",
+    "bs58": "^6.0.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "lucide-react": "^0.503.0",
@@ -39,6 +42,8 @@
     "sonner": "^2.0.3",
     "tailwind-merge": "^3.2.0",
     "tailwindcss": "^4.1.4",
+    "tweetnacl": "^1.0.3",
+    "tweetnacl-util": "^0.15.1",
     "zod": "^3.24.3"
   },
   "devDependencies": {

@@ -16,6 +16,7 @@ const Dashboard = () => {
   const [balance] = useState(1250.75);
   const navigate = useNavigate();
   const [receiveDialogOpen, setReceiveDialogOpen] = useState(false);
+
   const [transactions] = useState<Transaction[]>([
     {
       id: 1,
