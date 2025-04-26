@@ -6,6 +6,7 @@ import Register from './pages/Register'
 import NotFoundPage from './pages/not-found'
 import { AuthProvider } from './context/AuthContext'
 import Layout from './components/layout/Layout'
+import HeaderLayout from './components/layout/HeaderLayout'
 import Buy from './pages/Buy'
 import Send from './pages/Send'
 import Dashboard from './pages/Dashboard'
@@ -25,15 +26,21 @@ const router = createBrowserRouter([
     children: [
       {
         path: "",
-        element: <ProtectedRoute><Dashboard /></ProtectedRoute>,
-      },
-      {
-        path: "buy",
-        element: <ProtectedRoute><Buy /></ProtectedRoute>,
-      },
-      {
-        path: 'send',
-        element: <ProtectedRoute><Send /></ProtectedRoute>
+        element: <ProtectedRoute><HeaderLayout /></ProtectedRoute>,
+          children: [
+            {
+            path: "",
+            element: <Dashboard />,
+          },
+          {
+            path: "buy",
+            element: <Buy />,
+          },
+          {
+            path: "send",
+            element: <Send />,
+          },
+        ]
       },
       {
         path: 'register',
