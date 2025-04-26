@@ -3,6 +3,7 @@ import { QRCodeSVG } from "qrcode.react";
 import { useAuth } from "@/context/AuthContext";
 import { Copy, Share2, Link } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { toast } from "sonner";
 import {
   Dialog,
   DialogContent,
@@ -40,14 +41,12 @@ export function ReceiveDialog({ open, onOpenChange }: ReceiveDialogProps) {
 
   const copyAddressToClipboard = () => {
     navigator.clipboard.writeText(walletAddress);
-    // A simple alert since we don't have toast set up
-    alert("Address copied to clipboard");
+    toast.success("Address copied to clipboard");
   };
 
   const copyUrlToClipboard = () => {
     navigator.clipboard.writeText(generateQRValue());
-    // A simple alert since we don't have toast set up
-    alert("Payment URL copied to clipboard");
+    toast.success("Payment URL copied to clipboard");
   };
 
   const shareAddress = async () => {
@@ -60,6 +59,7 @@ export function ReceiveDialog({ open, onOpenChange }: ReceiveDialogProps) {
         });
       } catch (error) {
         console.error("Error sharing:", error);
+        toast.error("Failed to share address");
       }
     } else {
       copyAddressToClipboard();
