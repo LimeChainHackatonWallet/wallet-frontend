@@ -23,8 +23,8 @@ export function ReceiveDialog({ open, onOpenChange }: ReceiveDialogProps) {
   const [baseUrl, setBaseUrl] = useState<string>("");
 
   useEffect(() => {
-    if (user?.keyPairSigner?.address) {
-      setWalletAddress(user.keyPairSigner.address);
+    if (user?.address) {
+      setWalletAddress(user.address);
     } else {
       // Fallback address for demo/development
       setWalletAddress("G5RWouv5H8pkN4bqTnoo21NuNXtxVmQWB6yX");

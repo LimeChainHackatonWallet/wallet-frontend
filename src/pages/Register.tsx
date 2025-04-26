@@ -38,6 +38,7 @@ const Register = () => {
         return;
       }
       login({
+        address: wallet.publicKey.toBase58(),
         keyPairSigner: wallet,
       });
 
@@ -58,6 +59,7 @@ const Register = () => {
         return;
       }
       login({
+        address: wallet.publicKey.toBase58(),
         keyPairSigner: wallet,
       });
 

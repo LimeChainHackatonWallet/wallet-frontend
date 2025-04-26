@@ -1,4 +1,3 @@
-import { getPublicKeyAsync } from "@noble/ed25519";
 import { generateSolanaKeyPair } from "../wallet/keyPairGeneration";
 import { generateRegistrationOptions } from "./webAuthn";
 
@@ -10,13 +9,12 @@ export default async function loginWithPasskey() {
 
   try {
     if (credentials) {
-      const rawIdBytes = new Uint8Array(credentials.rawId);
+      const rawIdBytes = new Uint8Array(
+        (credentials as PublicKeyCredential).rawId
+      );
 
       const hashBuffer = await crypto.subtle.digest("SHA-256", rawIdBytes);
       const seed = new Uint8Array(hashBuffer);
-
-      // Derive public key from seed
-      const publicKey = await getPublicKeyAsync(seed);
 
       const wallet = generateSolanaKeyPair(seed);
       console.log("Login successful, wallet generated:", wallet.publicKey.toBase58());

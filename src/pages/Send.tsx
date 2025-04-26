@@ -66,7 +66,8 @@ export default function Send() {
     return <div>Loading...</div>;
   }
 
-  // Handle form submission
+  console.log("ARIAWEWAEWAEAW", user.address)
+  // Handle form submission 
   const handleSubmit = async (data: SendFormValues) => {
     setIsSubmitting(true);
     setTransactionDialog(true);
@@ -74,7 +75,7 @@ export default function Send() {
 
     // Mock transaction processing - would be replaced with actual transaction logic
   
-    await transferTokens(user, data.recipientAddress, data.amount);
+    // await transferTokens(user, data.recipientAddress, data.amount);
 
     setTimeout(() => {
       setIsSubmitting(false);
