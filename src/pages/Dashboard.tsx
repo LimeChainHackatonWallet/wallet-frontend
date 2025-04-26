@@ -2,20 +2,59 @@ import { useAuth } from "@/context/AuthContext";
 import { ArrowDown, Plus, Send } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { formatCurrency } from "@/lib/utils";
 import {
   TransactionHistory,
   Transaction,
 } from "@/components/TransactionHistory";
 import { ReceiveDialog } from "@/components/ReceiveDialog";
+import { PublicKey } from "@solana/web3.js";
+import {
+  getAssociatedTokenAddress,
+  getAccount
+} from '@solana/spl-token';
+import { SOLANA_DEVNET_URL, TOKEN_ADDRESS } from "@/services/solana/constants";
 
 const Dashboard = () => {
   const { user } = useAuth();
-  const [balance] = useState(1250.75);
+  const [balance, setBalance] = useState("0.00");
   const navigate = useNavigate();
   const [receiveDialogOpen, setReceiveDialogOpen] = useState(false);
+  const [balanceIntervalId, setBalanceIntervalId] = useState<NodeJS.Timeout|null>()
+
+  useEffect(() => {
+    const getBalance = async () => {
+      console.log("getting balance")
+      if (!user) {
+        return
+      }
+
+      const walletAddress = new PublicKey(user.address);
+      const tokenMint = new PublicKey(TOKEN_ADDRESS);
+  
+      const ata = await getAssociatedTokenAddress(tokenMint, walletAddress);
+
+      try {
+        const accountInfo = await getAccount(SOLANA_DEVNET_URL, ata);
+        console.log('Token balance:', Number(accountInfo.amount));
+        const amount = Number(accountInfo.amount) / 10 ** 9
+        const formatedAmount = Math.floor(amount*100)/100
+        setBalance(formatedAmount.toString())
+      } catch (err) {
+        console.error('Token account might not exist or has no balance:', err);
+      }
+    }
+    getBalance()
+    const id = setInterval(getBalance, 10_000)
+    setBalanceIntervalId(id)
+    return () => {
+      console.log("Component unmounted");
+      if (balanceIntervalId) {
+        clearInterval(balanceIntervalId)
+      }
+    };
+  }, []);
 
   const [transactions] = useState<Transaction[]>([
     {
@@ -46,7 +85,7 @@ const Dashboard = () => {
             Available Balance
           </p>
           <div className="flex items-baseline">
-            <p className="text-3xl font-bold">{formatCurrency(balance)}</p>
+            <p className="text-3xl font-bold">{balance}</p>
             <span className="text-primary-foreground/80 ml-2 text-sm">USD</span>
           </div>
         </div>
