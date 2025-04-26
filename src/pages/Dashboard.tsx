@@ -6,7 +6,6 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   TransactionHistory,
-  Transaction,
 } from "@/components/TransactionHistory";
 import { ReceiveDialog } from "@/components/ReceiveDialog";
 import { PublicKey } from "@solana/web3.js";
@@ -17,7 +16,7 @@ import {
 import { SOLANA_DEVNET_URL, TOKEN_ADDRESS, TOKEN_DECIMALS } from "@/services/solana/constants";
 
 const Dashboard = () => {
-  const { user } = useAuth();
+  const { user, transactions } = useAuth();
   const [balance, setBalance] = useState("0.00");
   const navigate = useNavigate();
   const [receiveDialogOpen, setReceiveDialogOpen] = useState(false);
@@ -45,33 +44,17 @@ const Dashboard = () => {
         console.error('Token account might not exist or has no balance:', err);
       }
     }
+
     getBalance()
     const id = setInterval(getBalance, 10_000)
     setBalanceIntervalId(id)
+
     return () => {
-      console.log("Component unmounted");
       if (balanceIntervalId) {
         clearInterval(balanceIntervalId)
       }
     };
   }, []);
-
-  const [transactions] = useState<Transaction[]>([
-    {
-      id: 1,
-      type: "received",
-      amount: 125.0,
-      address: "G5RW...JHGS",
-      date: "June 15, 2023",
-    },
-    {
-      id: 2,
-      type: "sent",
-      amount: 50.0,
-      address: "TNOO...XVMQ",
-      date: "June 10, 2023",
-    },
-  ]);
 
   if (!user) {
     return <div>Loading...</div>;

@@ -12,7 +12,7 @@ const ADDRESS_STORAGE_KEY = "pendingRecipientAddress";
 export default function Send() {
   const navigate = useNavigate();
   const location = useLocation();
-  const { user, isAuthenticated } = useAuth();
+  const { user, isAuthenticated, addTransaction } = useAuth();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [transactionDialog, setTransactionDialog] = useState(false);
   const [initialAddress, setInitialAddress] = useState<string>("");
@@ -72,7 +72,7 @@ export default function Send() {
     console.log("Form submitted with data:", data);
 
     // Create the transaction instruction with the signatures and send to backend
-    transferTokens(user, data.recipientAddress, Number(data.amount));
+    transferTokens(user, data.recipientAddress, Number(data.amount), addTransaction);
 
     setTimeout(() => {
       setIsSubmitting(false);
