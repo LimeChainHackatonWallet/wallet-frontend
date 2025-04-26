@@ -25,7 +25,6 @@ export default function Send() {
       if (addressParam) {
         setInitialAddress(addressParam);
         sessionStorage.setItem(ADDRESS_STORAGE_KEY, addressParam);
-        console.log("Setting initial address from URL:", addressParam);
         return;
       }
 
@@ -34,7 +33,6 @@ export default function Send() {
 
         if (storedAddress) {
           setInitialAddress(storedAddress);
-          console.log("Setting initial address from session:", storedAddress);
 
           sessionStorage.removeItem(ADDRESS_STORAGE_KEY);
         }
@@ -44,18 +42,10 @@ export default function Send() {
     handleAddressParameter();
   }, [location, isAuthenticated]);
 
-  useEffect(() => {
-    console.log("Current initialAddress state:", initialAddress);
-  }, [initialAddress]);
-
   if (!isAuthenticated) {
     const addressParam = new URLSearchParams(location.search).get("address");
     if (addressParam) {
       sessionStorage.setItem(ADDRESS_STORAGE_KEY, addressParam);
-      console.log(
-        "Saving address to session storage before redirect:",
-        addressParam
-      );
     }
 
     return <Navigate to={`/register?redirect=/send`} replace />;
@@ -65,18 +55,18 @@ export default function Send() {
     return <div>Loading...</div>;
   }
 
-  // Handle form submission 
   const handleSubmit = async (data: SendFormValues) => {
     setIsSubmitting(true);
     setTransactionDialog(true);
-    console.log("Form submitted with data:", data);
-
-    // Create the transaction instruction with the signatures and send to backend
-    transferTokens(user, data.recipientAddress, Number(data.amount), addTransaction);
+    transferTokens(
+      user,
+      data.recipientAddress,
+      Number(data.amount),
+      addTransaction
+    );
 
     setTimeout(() => {
       setIsSubmitting(false);
-      // In a real app, we would handle success/error here
     }, 2000);
   };
 

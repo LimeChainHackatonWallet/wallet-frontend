@@ -4,54 +4,52 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import {
-  TransactionHistory,
-} from "@/components/TransactionHistory";
+import { TransactionHistory } from "@/components/TransactionHistory";
 import { ReceiveDialog } from "@/components/ReceiveDialog";
 import { PublicKey } from "@solana/web3.js";
+import { getAssociatedTokenAddress, getAccount } from "@solana/spl-token";
 import {
-  getAssociatedTokenAddress,
-  getAccount
-} from '@solana/spl-token';
-import { SOLANA_DEVNET_URL, TOKEN_ADDRESS, TOKEN_DECIMALS } from "@/services/solana/constants";
+  SOLANA_DEVNET_URL,
+  TOKEN_ADDRESS,
+  TOKEN_DECIMALS,
+} from "@/services/solana/constants";
 
 const Dashboard = () => {
   const { user, transactions } = useAuth();
   const [balance, setBalance] = useState("0.00");
   const navigate = useNavigate();
   const [receiveDialogOpen, setReceiveDialogOpen] = useState(false);
-  const [balanceIntervalId, setBalanceIntervalId] = useState<NodeJS.Timeout|null>()
+  const [balanceIntervalId, setBalanceIntervalId] =
+    useState<NodeJS.Timeout | null>();
 
   useEffect(() => {
     const getBalance = async () => {
-      console.log("getting balance")
       if (!user) {
-        return
+        return;
       }
 
       const walletAddress = new PublicKey(user.address);
       const tokenMint = new PublicKey(TOKEN_ADDRESS);
-  
+
       const ata = await getAssociatedTokenAddress(tokenMint, walletAddress);
 
       try {
         const accountInfo = await getAccount(SOLANA_DEVNET_URL, ata);
-        console.log('Token balance:', Number(accountInfo.amount));
-        const amount = Number(accountInfo.amount) / (10 ** TOKEN_DECIMALS)
-        const formatedAmount = Math.floor(amount*100)/100
-        setBalance(formatedAmount.toString())
+        const amount = Number(accountInfo.amount) / 10 ** TOKEN_DECIMALS;
+        const formatedAmount = Math.floor(amount * 100) / 100;
+        setBalance(formatedAmount.toString());
       } catch (err) {
-        console.error('Token account might not exist or has no balance:', err);
+        console.error("Token account might not exist or has no balance:", err);
       }
-    }
+    };
 
-    getBalance()
-    const id = setInterval(getBalance, 10_000)
-    setBalanceIntervalId(id)
+    getBalance();
+    const id = setInterval(getBalance, 10_000);
+    setBalanceIntervalId(id);
 
     return () => {
       if (balanceIntervalId) {
-        clearInterval(balanceIntervalId)
+        clearInterval(balanceIntervalId);
       }
     };
   }, []);

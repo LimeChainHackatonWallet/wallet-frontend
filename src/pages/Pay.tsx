@@ -2,13 +2,25 @@ import { useAuth } from "@/context/AuthContext";
 import { Button } from "@/components/ui/button";
 import { useEffect, useState } from "react";
 import bs58 from "bs58";
-import { VersionedTransaction, PublicKey, TransactionMessage } from "@solana/web3.js";
-import { createTransferInstruction, getAssociatedTokenAddressSync } from "@solana/spl-token";
+import {
+  VersionedTransaction,
+  PublicKey,
+  TransactionMessage,
+} from "@solana/web3.js";
+import {
+  createTransferInstruction,
+  getAssociatedTokenAddressSync,
+} from "@solana/spl-token";
 
 import nacl from "tweetnacl";
 import naclUtil from "tweetnacl-util";
-import { BACKEND_PAYER_ADDRESS, BACKEND_URL, SOLANA_DEVNET_URL, TOKEN_ADDRESS, TOKEN_DECIMALS } from "@/services/solana/constants";
-
+import {
+  BACKEND_PAYER_ADDRESS,
+  BACKEND_URL,
+  SOLANA_DEVNET_URL,
+  TOKEN_ADDRESS,
+  TOKEN_DECIMALS,
+} from "@/services/solana/constants";
 
 type SignMethodData = {
   data: {
@@ -31,7 +43,7 @@ type PaymentData = {
     currency: string;
     value: number;
   };
-  methodData: [SignMethodData|PayMethodData];
+  methodData: [SignMethodData | PayMethodData];
   paymentRequestId: string;
 };
 
@@ -45,7 +57,10 @@ const Pay = () => {
     }
 
     const messageBytes = naclUtil.decodeUTF8(message);
-    const signature = nacl.sign.detached(messageBytes, user.keyPairSigner.secretKey);
+    const signature = nacl.sign.detached(
+      messageBytes,
+      user.keyPairSigner.secretKey
+    );
 
     const paymentAppResponse = {
       methodName: "WalletSign",
@@ -72,42 +87,50 @@ const Pay = () => {
 
     // create array of instructions
     // TODO: add additional transfer for the backend
-    const address = getAssociatedTokenAddressSync(new PublicKey(TOKEN_ADDRESS), new PublicKey(user.address))
-    const toAddress = getAssociatedTokenAddressSync(new PublicKey(TOKEN_ADDRESS), new PublicKey(to))
+    const address = getAssociatedTokenAddressSync(
+      new PublicKey(TOKEN_ADDRESS),
+      new PublicKey(user.address)
+    );
+    const toAddress = getAssociatedTokenAddressSync(
+      new PublicKey(TOKEN_ADDRESS),
+      new PublicKey(to)
+    );
     const instructions = [
       createTransferInstruction(
         new PublicKey(address),
         new PublicKey(toAddress),
         new PublicKey(user.address),
-        amount * (10 ** TOKEN_DECIMALS)
-      )
+        amount * 10 ** TOKEN_DECIMALS
+      ),
     ];
-    
+
     // create v0 compatible message
     const messageV0 = new TransactionMessage({
       payerKey: new PublicKey(BACKEND_PAYER_ADDRESS),
       recentBlockhash: blockhash,
       instructions,
     }).compileToV0Message();
-    
+
     // make a versioned transaction
     const transactionV0 = new VersionedTransaction(messageV0);
 
-    transactionV0.sign([user.keyPairSigner])
+    transactionV0.sign([user.keyPairSigner]);
 
     const result = await fetch(`${BACKEND_URL}/api/sponsor-transaction`, {
       method: "POST",
       headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
+        Accept: "application/json",
+        "Content-Type": "application/json",
       },
-      body: JSON.stringify({transaction: btoa(String.fromCharCode(...transactionV0.serialize()))})
-    })
+      body: JSON.stringify({
+        transaction: btoa(String.fromCharCode(...transactionV0.serialize())),
+      }),
+    });
 
     const { transactionHash } = await result.json();
 
     if (transactionHash) {
-      addTransaction(transactionHash, amount * (10 ** TOKEN_DECIMALS), to)
+      addTransaction(transactionHash, amount * 10 ** TOKEN_DECIMALS, to);
     }
 
     const paymentAppResponse = {
@@ -124,23 +147,15 @@ const Pay = () => {
   }
 
   useEffect(() => {
-    // Listen for messages from the service worker
     navigator.serviceWorker.addEventListener("message", (e) => {
       setPaymentData(e.data);
     });
 
-    // Notify the service worker that the payment window has loaded
     if (navigator.serviceWorker.controller) {
       navigator.serviceWorker.controller.postMessage(
         "payment_app_window_ready"
       );
-    } else {
-      console.log("controller not initialized");
     }
-
-    return () => {
-      console.log("Component unmounted");
-    };
   }, []);
 
   if (!paymentData) {
@@ -160,7 +175,7 @@ const Pay = () => {
       </div>
     );
   } else if (type === "payment") {
-    const {to, amount} = paymentData.methodData[0].data;
+    const { to, amount } = paymentData.methodData[0].data;
     form = (
       <div>
         <p>The website {paymentData.origin} requested payment of</p>
@@ -168,9 +183,12 @@ const Pay = () => {
           amount {paymentData.total.value} {paymentData.total.currency}
         </p>
         <pre>{paymentData.total.value}</pre>
-        <code>Data: {type}</code><br></br>
-        <code>To: {to}</code><br></br>
-        <code>Amount: {amount}</code><br></br>
+        <code>Data: {type}</code>
+        <br></br>
+        <code>To: {to}</code>
+        <br></br>
+        <code>Amount: {amount}</code>
+        <br></br>
         <br></br>
         <Button onClick={() => pay(to, amount)}>Pay</Button>
       </div>
