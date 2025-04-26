@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { useEffect, useState } from 'react';
 import { formatAddress } from "@/lib/utils";
 import { createSignableMessage } from '@solana/signers';
-import { getUtf8Encoder, verifySignature, getBase58Decoder } from "gill";
+import { getUtf8Encoder, getBase58Decoder } from "gill";
 
 type MethodData = {
   data: {
