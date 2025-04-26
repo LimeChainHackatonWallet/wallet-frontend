@@ -29,10 +29,38 @@ export function formatAddress(
   return `${start}....${end}`;
 }
 
-export const formatCurrency = (amount: number) => {
+/**
+ * Format currency values for display
+ * @param amount Number to format as currency
+ * @returns Formatted currency string
+ */
+export function formatCurrency(amount: number): string {
   return new Intl.NumberFormat("en-US", {
     style: "currency",
     currency: "USD",
     minimumFractionDigits: 2,
   }).format(amount);
-};
+}
+
+/**
+ * Validates if a string is a valid Solana address
+ * @param address String to validate as a Solana address
+ * @returns Boolean indicating if the address is valid
+ */
+export function isValidSolanaAddress(address: string): boolean {
+  // Basic validation: Solana addresses are 44 characters long
+  // and are base58 encoded (only contain alphanumeric characters
+  // except for 0, O, I, and l)
+  if (!address || typeof address !== "string") {
+    return false;
+  }
+
+  // Check length
+  if (address.length !== 44) {
+    return false;
+  }
+
+  // Check for valid base58 characters
+  const base58Regex = /^[A-HJ-NP-Za-km-z1-9]+$/;
+  return base58Regex.test(address);
+}

@@ -25,7 +25,7 @@ const Header = () => {
           </AvatarFallback>
         </Avatar>
         <div>
-          <p className="font-medium">Welcome</p>
+          <p className="font-medium">Account:</p>
           <h2 className="text-xl font-bold">{formatAddress(user.address)}</h2>
         </div>
       </div>
