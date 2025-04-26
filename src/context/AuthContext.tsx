@@ -1,8 +1,8 @@
 import { createContext, useContext, useState, ReactNode } from "react";
+import { KeyPairSigner} from 'gill';
 
 type User = {
-  address: string;
-  keyPair: CryptoKeyPair;
+  keyPairSigner: KeyPairSigner;
 };
 
 type AuthContextType = {

@@ -2,8 +2,9 @@ import { useAuth } from "@/context/AuthContext";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { useEffect, useState } from 'react';
-import { signBytes, getUtf8Encoder } from 'gill';
-import { formatAddress, uint8ArrayToHexString } from "@/lib/utils";
+import { formatAddress } from "@/lib/utils";
+import { createSignableMessage } from '@solana/signers';
+import { getUtf8Encoder, verifySignature, getBase58Decoder } from "gill";
 
 type MethodData = {
   data: {
@@ -30,14 +31,20 @@ const Pay = () => {
     if (!user) {
       throw new Error("User is not authenticated")
     }
-    const uint8Array = getUtf8Encoder().encode(message);
-    const signature = await signBytes(user.keyPair.privateKey, uint8Array);
-    
+
+    const uint8ArrayMessage = getUtf8Encoder().encode(message);
+    const signableMessage = createSignableMessage(new Uint8Array(uint8ArrayMessage));
+    const signatures = await user.keyPairSigner.signMessages([signableMessage]);
+    const signature = signatures[0][user.keyPairSigner.address];
+
+    const verify = await verifySignature(user.keyPairSigner.keyPair.publicKey, signature, uint8ArrayMessage)
+    console.log(321, verify)
     const paymentAppResponse = {
       methodName: "WalletSign",
       details: {
-        signature: uint8ArrayToHexString(signature),
+        signature: getBase58Decoder().decode(signature),
         message: message,
+        publicKey: user.keyPairSigner.address
       },
     };
 
@@ -127,12 +134,12 @@ const Pay = () => {
           <Avatar className="h-10 w-10 border border-primary/20">
             <AvatarImage src={`https://avatar.vercel.sh/${user.address}`} />
             <AvatarFallback className="bg-primary/10 text-primary">
-              {user?.address?.substring(0, 2).toUpperCase() || "U"}
+              {user?.keyPairSigner.address?.substring(0, 2).toUpperCase() || "U"}
             </AvatarFallback>
           </Avatar>
           <div>
             <p className="font-medium">Welcome</p>
-            <h2 className="text-xl font-bold">{formatAddress(user.address)}</h2>
+            <h2 className="text-xl font-bold">{formatAddress(user.keyPairSigner.address)}</h2>
           </div>
         </div>
       </div>

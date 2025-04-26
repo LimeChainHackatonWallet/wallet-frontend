@@ -38,8 +38,7 @@ const Register = () => {
         return;
       }
       login({
-        address: wallet.address,
-        keyPair: wallet.keyPair,
+        keyPairSigner: wallet,
       });
 
       // Navigate to the redirect path or default to home
@@ -59,8 +58,7 @@ const Register = () => {
         return;
       }
       login({
-        address: wallet.address,
-        keyPair: wallet.keyPair,
+        keyPairSigner: wallet,
       });
 
       navigate(getRedirectPath());
