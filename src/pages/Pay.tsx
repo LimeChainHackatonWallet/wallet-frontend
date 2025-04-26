@@ -2,12 +2,15 @@ import { useAuth } from "@/context/AuthContext";
 import { Button } from "@/components/ui/button";
 import { useEffect, useState } from "react";
 import bs58 from "bs58";
-import { VersionedTransaction, SystemProgram, PublicKey, Connection, TransactionMessage } from "@solana/web3.js";
+import { VersionedTransaction, PublicKey, Connection, TransactionMessage } from "@solana/web3.js";
+import {createTransferInstruction, getAssociatedTokenAddressSync} from "@solana/spl-token";
+
 import nacl from "tweetnacl";
 import naclUtil from "tweetnacl-util";
 
 const BACKEND_URL = "http://localhost:3000"
 const BACKEND_PAYER_ADDRESS = "2GesLoaCkAAfHF5iSgNDwgz9eSuRQv99gWknCqV5uk69"
+const TOKEN_ADDRESS = "BZSyBGAzgER4LsQioSXvHxvPA9yPseNqnLX275LJQHKX"
 
 type SignMethodData = {
   data: {
@@ -71,14 +74,16 @@ const Pay = () => {
     const blockhash = (await connection.getLatestBlockhash()).blockhash;
 
     // create array of instructions
-    // TODO: replace with Token transfer
     // TODO: add additional transfer for the backend
+    const address = getAssociatedTokenAddressSync(new PublicKey(TOKEN_ADDRESS), new PublicKey(user.address))
+    const toAddress = getAssociatedTokenAddressSync(new PublicKey(TOKEN_ADDRESS), new PublicKey(to))
     const instructions = [
-      SystemProgram.transfer({
-        fromPubkey: new PublicKey(user.keyPairSigner.publicKey.toBase58()),
-        toPubkey: new PublicKey(bs58.decode(to)),
-        lamports: amount,
-      }),
+      createTransferInstruction(
+        new PublicKey(address),
+        new PublicKey(toAddress),
+        new PublicKey(user.address),
+        amount
+      )
     ];
     
     // create v0 compatible message
