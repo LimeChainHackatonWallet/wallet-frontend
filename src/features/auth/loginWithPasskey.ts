@@ -18,13 +18,7 @@ export default async function loginWithPasskey() {
       // Derive public key from seed
       const publicKey = await getPublicKeyAsync(seed);
 
-      // Concatenate seed + publicKey => 64 bytes
-      const fullSecretKey = new Uint8Array(64);
-      fullSecretKey.set(seed, 0);
-      fullSecretKey.set(publicKey, 32);
-
-      const wallet = await generateSolanaKeyPair(fullSecretKey);
-      console.log("Login successful, wallet:", wallet);
+      const wallet = generateSolanaKeyPair(seed);
 
       return wallet;
     }

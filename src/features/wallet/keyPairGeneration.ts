@@ -1,9 +1,7 @@
-import { createKeyPairSignerFromBytes } from "gill";
+import { Keypair } from "@solana/web3.js";
 
-// Used documentation: https://solana.com/developers/cookbook/wallets/create-keypair
-
-export async function generateSolanaKeyPair(keypairBytes: Uint8Array) {
-  // Used Passkey to generate a solana keypair
-  const signer = await createKeyPairSignerFromBytes(keypairBytes);
-  return signer;
+export function generateSolanaKeyPair(keypairBytes: Uint8Array) {
+  // Create Keypair from secret key (Uint8Array)
+  const keypair = Keypair.fromSeed(keypairBytes);
+  return keypair;
 }

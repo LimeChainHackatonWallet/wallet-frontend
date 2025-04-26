@@ -1,37 +1,32 @@
-import { generateSolanaKeyPair } from "../wallet/keyPairGeneration";
+// auth/registerWithPasskey.js
+import { Keypair } from "@solana/web3.js";
 import { generateRegistrationOptions } from "./webAuthn";
-import { getPublicKeyAsync } from "@noble/ed25519";
+import { generateSolanaKeyPair } from "../wallet/keyPairGeneration";
 
-// TODO: Potential problem is that when user clicks register he will register again and the old passkey will be lost (wallet will be lost)!
-
+// Securely register a new wallet using Passkey
 export default async function registerWithPasskey() {
-  const publicKey = generateRegistrationOptions();
+  const publicKeyCredentialCreationOptions = generateRegistrationOptions();
 
   try {
     const credentials = await navigator.credentials.create({
-      publicKey: publicKey,
+      publicKey: publicKeyCredentialCreationOptions,
     });
 
-    if (credentials) {
-      const rawIdBytes = new Uint8Array(credentials.rawId);
+    if (!credentials) throw new Error("No credentials returned");
 
-      const hashBuffer = await crypto.subtle.digest("SHA-256", rawIdBytes);
-      const seed = new Uint8Array(hashBuffer);
+    const rawIdBytes = new Uint8Array(credentials.rawId);
 
-      // Derive public key from seed
-      const publicKey = await getPublicKeyAsync(seed);
+    // Hash the rawId to create a seed
+    const hashBuffer = await crypto.subtle.digest("SHA-256", rawIdBytes);
+    const seed = new Uint8Array(hashBuffer); // 32 bytes
 
-      // Concatenate seed + publicKey => 64 bytes
-      const fullSecretKey = new Uint8Array(64);
-      fullSecretKey.set(seed, 0);
-      fullSecretKey.set(publicKey, 32);
+    // Generate Solana Keypair from seed
+    const wallet = generateSolanaKeyPair(seed);
+    // wallet.publicKey.toBase58(); -> Derive address
 
-      const wallet = await generateSolanaKeyPair(fullSecretKey);
-      console.log("Registration successful, wallet:", wallet);
-
-      return wallet;
-    }
-  } catch (err) {
-    console.error("Passkey registration failed:", err);
+    return wallet;
+  } catch (error) {
+    console.error("Passkey registration failed:", error);
+    throw error;
   }
 }
