@@ -15,6 +15,13 @@ export default function ProtectedRoute({
   const location = useLocation();
   const storedAuthFlag = localStorage.getItem(AUTH_FLAG_KEY);
 
+  function handleNavigateToRegister() {
+    const currentPath = location.pathname;
+    navigate(`/register?redirect=${encodeURIComponent(currentPath)}`, {
+      replace: true,
+    });
+  }
+
   useEffect(() => {
     const checkAuth = async () => {
       if (!isAuthenticated) {
@@ -30,12 +37,12 @@ export default function ProtectedRoute({
             });
           } catch (error) {
             console.error("Login error:", error);
+            if ((error as Error).message.includes("not allowed")) {
+              handleNavigateToRegister();
+            }
           }
         } else {
-          const currentPath = location.pathname;
-          navigate(`/register?redirect=${encodeURIComponent(currentPath)}`, {
-            replace: true,
-          });
+          handleNavigateToRegister();
         }
       }
     };

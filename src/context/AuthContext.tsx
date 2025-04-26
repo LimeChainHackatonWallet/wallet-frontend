@@ -13,8 +13,8 @@ type AuthContextType = {
   logout: () => void;
 };
 
-// Local storage key for auth flag
 export const AUTH_FLAG_KEY = "wallet_auth";
+export const REGISTRATION_FLAG_KEY = "registration-flag";
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
@@ -24,6 +24,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const login = (userData: User) => {
     setUser(userData);
     localStorage.setItem(AUTH_FLAG_KEY, "true");
+    localStorage.setItem(REGISTRATION_FLAG_KEY, "true");
   };
 
   const logout = () => {
