@@ -1,5 +1,3 @@
-// auth/registerWithPasskey.js
-import { Keypair } from "@solana/web3.js";
 import { generateRegistrationOptions } from "./webAuthn";
 import { generateSolanaKeyPair } from "../wallet/keyPairGeneration";
 
@@ -14,7 +12,9 @@ export default async function registerWithPasskey() {
 
     if (!credentials) throw new Error("No credentials returned");
 
-    const rawIdBytes = new Uint8Array(credentials.rawId);
+    const rawIdBytes = new Uint8Array(
+      (credentials as PublicKeyCredential).rawId
+    );
 
     // Hash the rawId to create a seed
     const hashBuffer = await crypto.subtle.digest("SHA-256", rawIdBytes);
@@ -22,7 +22,6 @@ export default async function registerWithPasskey() {
 
     // Generate Solana Keypair from seed
     const wallet = generateSolanaKeyPair(seed);
-    // wallet.publicKey.toBase58(); -> Derive address
 
     return wallet;
   } catch (error) {
