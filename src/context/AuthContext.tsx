@@ -1,8 +1,9 @@
+import { Keypair } from "@solana/web3.js";
 import { createContext, useContext, useState, ReactNode } from "react";
-import { KeyPairSigner} from 'gill';
 
 type User = {
-  keyPairSigner: KeyPairSigner;
+  address: string;
+  keyPairSigner: Keypair;
 };
 
 type AuthContextType = {
