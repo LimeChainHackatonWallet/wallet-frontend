@@ -1,54 +1,22 @@
 import { useAuth } from "@/context/AuthContext";
-import { ArrowDown, DollarSign, LogOut, Plus, Send } from "lucide-react";
+import { ArrowDown, DollarSign, Plus, Send } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { formatAddress } from "@/lib/utils";
+import { formatCurrency } from "@/lib/utils";
 
 const Dashboard = () => {
-  const { user, logout } = useAuth();
+  const { user } = useAuth();
   const [balance] = useState(1250.75);
   const navigate = useNavigate();
-
-  const handleLogout = () => {
-    logout();
-  };
 
   if (!user) {
     return <div>Loading...</div>;
   }
 
-  const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat("en-US", {
-      style: "currency",
-      currency: "USD",
-      minimumFractionDigits: 2,
-    }).format(amount);
-  };
-
   return (
-    <div className="flex flex-col max-w-md mx-auto p-4 space-y-6">
-      {/* Header with user info */}
-      <div className="flex justify-between items-center">
-        <div className="flex items-center gap-3">
-          <Avatar className="h-10 w-10 border border-primary/20">
-            <AvatarImage src={`https://avatar.vercel.sh/${user?.address}`} />
-            <AvatarFallback className="bg-primary/10 text-primary">
-              {user?.address?.substring(0, 2).toUpperCase() || "U"}
-            </AvatarFallback>
-          </Avatar>
-          <div>
-            <p className="font-medium">Welcome</p>
-            <h2 className="text-xl font-bold">{formatAddress(user.address)}</h2>
-          </div>
-        </div>
-        <Button variant="outline" size="icon" onClick={handleLogout}>
-          <LogOut className="h-5 w-5" />
-        </Button>
-      </div>
-
+    <>
       {/* Balance Card */}
       <Card className="overflow-hidden">
         <div className="bg-gradient-to-r from-primary to-primary/80 text-primary-foreground p-6">
@@ -67,6 +35,8 @@ const Dashboard = () => {
         <Button
           variant="outline"
           className="flex flex-col items-center justify-center gap-2 p-4 h-24"
+          onClick={() => navigate("/send")}
+          aria-label="Send money"
         >
           <Send className="h-6 w-6" />
           <span className="text-sm font-medium">Send</span>
@@ -74,6 +44,8 @@ const Dashboard = () => {
         <Button
           variant="outline"
           className="flex flex-col items-center justify-center gap-2 p-4 h-24"
+          onClick={() => navigate("/receive")}
+          aria-label="Receive money"
         >
           <ArrowDown className="h-6 w-6" />
           <span className="text-sm font-medium">Receive</span>
@@ -82,6 +54,7 @@ const Dashboard = () => {
           variant="outline"
           className="flex flex-col items-center justify-center gap-2 p-4 h-24"
           onClick={() => navigate("/buy")}
+          aria-label="Buy cryptocurrency"
         >
           <Plus className="h-6 w-6" />
           <span className="text-sm font-medium">Buy</span>
@@ -100,7 +73,7 @@ const Dashboard = () => {
           </div>
         </CardContent>
       </Card>
-    </div>
+    </>
   );
 };
 
