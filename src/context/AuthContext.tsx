@@ -13,18 +13,23 @@ type AuthContextType = {
   logout: () => void;
 };
 
+export const AUTH_FLAG_KEY = "wallet_auth";
+export const REGISTRATION_FLAG_KEY = "registration-flag";
+
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
-  console.log("user", user);
 
   const login = (userData: User) => {
     setUser(userData);
+    localStorage.setItem(AUTH_FLAG_KEY, "true");
+    localStorage.setItem(REGISTRATION_FLAG_KEY, "true");
   };
 
   const logout = () => {
     setUser(null);
+    localStorage.removeItem(AUTH_FLAG_KEY);
   };
 
   const value = {
