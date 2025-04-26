@@ -7,6 +7,8 @@ import { SendForm, SendFormValues } from "@/components/forms/send-form";
 import { TransactionDialog } from "@/components/ui/transaction-dialog";
 import transferTokens from "@/services/solana/transfer_tokens";
 import { PublicKey } from "@solana/web3.js";
+import Pay from "./Pay";
+import instructionCreate from "@/utils/instructionCreate";
 
 const ADDRESS_STORAGE_KEY = "pendingRecipientAddress";
 
@@ -66,7 +68,6 @@ export default function Send() {
     return <div>Loading...</div>;
   }
 
-  console.log("ARIAWEWAEWAEAW", user.address)
   // Handle form submission 
   const handleSubmit = async (data: SendFormValues) => {
     setIsSubmitting(true);
@@ -74,8 +75,7 @@ export default function Send() {
     console.log("Form submitted with data:", data);
 
     // Mock transaction processing - would be replaced with actual transaction logic
-  
-    // await transferTokens(user, data.recipientAddress, data.amount);
+    transferTokens(user.address, data.recipientAddress, data.amount);
 
     setTimeout(() => {
       setIsSubmitting(false);

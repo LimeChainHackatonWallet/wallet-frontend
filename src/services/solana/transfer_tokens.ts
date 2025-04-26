@@ -1,5 +1,5 @@
 import { getOrCreateAssociatedTokenAccount, createTransferInstruction, getAssociatedTokenAddressSync } from "@solana/spl-token";
-import { Connection, Keypair, ParsedAccountData, PublicKey, Transaction, TransactionInstruction } from "@solana/web3.js";
+import { Connection, Keypair, ParsedAccountData, PublicKey, sendAndConfirmRawTransaction, Transaction, TransactionInstruction, TransactionMessage } from "@solana/web3.js";
 import { MINTED_TOKEN_ADDRESS, SOLANA_DEVNET_URL } from "./constants";
 
 // spl-token create-account <token_mint_addres> --owner <owner_of_this_ata> --fee-payer <wallet_that_is_paying_the_fee_for_creating_the_ata_ => Use_wallet_path_if_locally>
@@ -11,27 +11,36 @@ import { MINTED_TOKEN_ADDRESS, SOLANA_DEVNET_URL } from "./constants";
 //     return result;
 // }
 
-export default async function transferTokens(sender: any, receiver: string, amount: number) {
+export default async function transferTokens(sender: string, receiver: string, amount: number) {
     const connection = new Connection("https://api.devnet.solana.com", "confirmed");
     const minted_token = new PublicKey("BZSyBGAzgER4LsQioSXvHxvPA9yPseNqnLX275LJQHKX"); 
 
+    const senderPK = new PublicKey(sender);
     const receiverPK = new PublicKey(receiver);
 
-    // // Ata of the sender => Geting source token account
-    // let fromTokenAccount = getAssociatedTokenAddressSync(
-    //     minted_token,
-    //     sender.publicKey,
-    // );
+    // Ata of the sender => Geting source token account
+    let fromTokenAccount = getAssociatedTokenAddressSync(
+        minted_token,
+        senderPK,
+    );
+    console.log("Source Account: ", fromTokenAccount.toBase58());
 
-    // console.log("Source Account: ", fromTokenAccount);
-
-    // // Ata of the receiver => Geting destination token account
-    // let toTokenAccount = await getOrCreateAssociatedTokenAccount(
-    //     connection,
-    //     sender.publicKey,
-    //     minted_token,
-    //     receiverPK
-    // );
-    // console.log("Destination Account: ", toTokenAccount.address.toString());
+    // Ata of the receiver => Geting destination token account
+    let toTokenAccount = getAssociatedTokenAddressSync(
+        minted_token,
+        receiverPK
+    );
     
+    console.log("Destination Account: ", toTokenAccount.toBase58());
+
+    const transaction = new Transaction().add(
+        createTransferInstruction(
+            new PublicKey(fromTokenAccount),
+            new PublicKey(toTokenAccount),
+            senderPK,
+            amount,
+        )
+    );
+
+
 }
