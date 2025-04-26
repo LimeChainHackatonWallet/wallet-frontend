@@ -1,13 +1,29 @@
 import { useAuth } from "@/context/AuthContext";
 import { Button } from "@/components/ui/button";
 import { useEffect, useState } from "react";
-import { createSignableMessage } from "@solana/signers";
-import { getUtf8Encoder, getBase58Decoder } from "gill";
+import bs58 from "bs58";
+import { VersionedTransaction, PublicKey, Connection, TransactionMessage } from "@solana/web3.js";
+import {createTransferInstruction, getAssociatedTokenAddressSync} from "@solana/spl-token";
 
-type MethodData = {
+import nacl from "tweetnacl";
+import naclUtil from "tweetnacl-util";
+
+const BACKEND_URL = "http://localhost:3000"
+const BACKEND_PAYER_ADDRESS = "2GesLoaCkAAfHF5iSgNDwgz9eSuRQv99gWknCqV5uk69"
+const TOKEN_ADDRESS = "BZSyBGAzgER4LsQioSXvHxvPA9yPseNqnLX275LJQHKX"
+
+type SignMethodData = {
   data: {
-    type: string;
+    type: "sign";
     message: string;
+  };
+};
+
+type PayMethodData = {
+  data: {
+    type: "payment";
+    to: string;
+    amount: number;
   };
 };
 
@@ -17,7 +33,7 @@ type PaymentData = {
     currency: string;
     value: number;
   };
-  methodData: [MethodData];
+  methodData: [SignMethodData|PayMethodData];
   paymentRequestId: string;
 };
 
@@ -30,19 +46,15 @@ const Pay = () => {
       throw new Error("User is not authenticated");
     }
 
-    const uint8ArrayMessage = getUtf8Encoder().encode(message);
-    const signableMessage = createSignableMessage(
-      new Uint8Array(uint8ArrayMessage)
-    );
-    const signatures = await user.keyPairSigner.signMessages([signableMessage]);
-    const signature = signatures[0][user.keyPairSigner.address];
+    const messageBytes = naclUtil.decodeUTF8(message);
+    const signature = nacl.sign.detached(messageBytes, user.keyPairSigner.secretKey);
 
     const paymentAppResponse = {
       methodName: "WalletSign",
       details: {
-        signature: getBase58Decoder().decode(signature),
+        signature: bs58.encode(signature),
         message: message,
-        publicKey: user.keyPairSigner.address,
+        publicKey: user.keyPairSigner.publicKey.toBase58(),
       },
     };
 
@@ -52,10 +64,52 @@ const Pay = () => {
     window.close();
   }
 
-  function pay() {
+  async function pay(to: string, amount: number) {
     if (!user) {
       throw new Error("User is not authenticated");
     }
+
+    // TODO: use backend for getting the latestBlockHash?
+    const connection = new Connection("https://api.devnet.solana.com", "confirmed");
+    const blockhash = (await connection.getLatestBlockhash()).blockhash;
+
+    // create array of instructions
+    // TODO: add additional transfer for the backend
+    const address = getAssociatedTokenAddressSync(new PublicKey(TOKEN_ADDRESS), new PublicKey(user.address))
+    const toAddress = getAssociatedTokenAddressSync(new PublicKey(TOKEN_ADDRESS), new PublicKey(to))
+    const instructions = [
+      createTransferInstruction(
+        new PublicKey(address),
+        new PublicKey(toAddress),
+        new PublicKey(user.address),
+        amount
+      )
+    ];
+    
+    // create v0 compatible message
+    const messageV0 = new TransactionMessage({
+      payerKey: new PublicKey(BACKEND_PAYER_ADDRESS),
+      recentBlockhash: blockhash,
+      instructions,
+    }).compileToV0Message();
+    
+    // make a versioned transaction
+    const transactionV0 = new VersionedTransaction(messageV0);
+
+    transactionV0.sign([user.keyPairSigner])
+
+    const result = await fetch(`${BACKEND_URL}/api/sponsor-transaction`, {
+      method: "POST",
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({transaction: btoa(String.fromCharCode(...transactionV0.serialize()))})
+    })
+
+    const data = await result.json();
+    console.log(data)
+
     const paymentAppResponse = {
       methodName: "WalletPayment",
       details: {
@@ -107,7 +161,7 @@ const Pay = () => {
       </div>
     );
   } else if (type === "payment") {
-    // TODO: not tested for now
+    const {to, amount} = paymentData.methodData[0].data;
     form = (
       <div>
         <p>The website {paymentData.origin} requested payment of</p>
@@ -115,9 +169,11 @@ const Pay = () => {
           amount {paymentData.total.value} {paymentData.total.currency}
         </p>
         <pre>{paymentData.total.value}</pre>
-        <code>Data: {type}</code>
+        <code>Data: {type}</code><br></br>
+        <code>To: {to}</code><br></br>
+        <code>Amount: {amount}</code><br></br>
         <br></br>
-        <Button onClick={pay}>Pay</Button>
+        <Button onClick={() => pay(to, amount)}>Pay</Button>
       </div>
     );
   } else {
