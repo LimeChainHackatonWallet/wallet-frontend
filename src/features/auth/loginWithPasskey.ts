@@ -17,6 +17,7 @@ export default async function loginWithPasskey() {
       const seed = new Uint8Array(hashBuffer);
 
       const wallet = generateSolanaKeyPair(seed);
+      console.log("Login successful, wallet generated:", wallet.publicKey.toBase58());
 
       return wallet;
     }

@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { useNavigate, useLocation, Navigate } from "react-router-dom";
 import { SendForm, SendFormValues } from "@/components/forms/send-form";
 import { TransactionDialog } from "@/components/ui/transaction-dialog";
+import transferTokens from "@/services/solana/transfer_tokens";
 
 const ADDRESS_STORAGE_KEY = "pendingRecipientAddress";
 
@@ -64,13 +65,15 @@ export default function Send() {
     return <div>Loading...</div>;
   }
 
-  // Handle form submission
-  const handleSubmit = (data: SendFormValues) => {
+  // Handle form submission 
+  const handleSubmit = async (data: SendFormValues) => {
     setIsSubmitting(true);
     setTransactionDialog(true);
     console.log("Form submitted with data:", data);
 
-    // Mock transaction processing - would be replaced with actual transaction logic
+    // Create the transaction instruction with the signatures and send to backend
+    transferTokens(user, data.recipientAddress, Number(data.amount));
+
     setTimeout(() => {
       setIsSubmitting(false);
       // In a real app, we would handle success/error here

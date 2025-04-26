@@ -12,6 +12,7 @@ const BACKEND_URL = "http://localhost:3000"
 const BACKEND_PAYER_ADDRESS = "2GesLoaCkAAfHF5iSgNDwgz9eSuRQv99gWknCqV5uk69"
 const TOKEN_ADDRESS = "BZSyBGAzgER4LsQioSXvHxvPA9yPseNqnLX275LJQHKX"
 
+
 type SignMethodData = {
   data: {
     type: "sign";
