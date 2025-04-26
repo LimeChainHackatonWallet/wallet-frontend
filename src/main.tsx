@@ -6,8 +6,9 @@ import Register from './pages/Register'
 import NotFoundPage from './pages/not-found'
 import { AuthProvider } from './context/AuthContext'
 import Layout from './components/layout/Layout'
+import HeaderLayout from './components/layout/HeaderLayout'
 import Buy from './pages/Buy'
-import Pay from './pages/Pay'
+import Send from './pages/Send'
 import Dashboard from './pages/Dashboard'
 import ProtectedRoute from './components/ProtectedRoute'
 import { MoonPayProvider } from '@moonpay/moonpay-react';
@@ -15,6 +16,7 @@ import { MoonPayProvider } from '@moonpay/moonpay-react';
 // Browsers do not support WebCrypto API for ed255519 key generation
 // This provides support for it
 import { install } from '@solana/webcrypto-ed25519-polyfill';
+import Pay from './pages/Pay'
 install(); // patches WebCrypto for Ed25519 support
 
 const router = createBrowserRouter([
@@ -25,11 +27,21 @@ const router = createBrowserRouter([
     children: [
       {
         path: "",
-        element: <ProtectedRoute><Dashboard /></ProtectedRoute>,
-      },
-      {
-        path: "buy",
-        element: <ProtectedRoute><Buy /></ProtectedRoute>,
+        element: <ProtectedRoute><HeaderLayout /></ProtectedRoute>,
+          children: [
+            {
+            path: "",
+            element: <Dashboard />,
+          },
+          {
+            path: "buy",
+            element: <Buy />,
+          },
+          {
+            path: "send",
+            element: <Send />,
+          },
+        ]
       },
       {
         path: "pay",

@@ -26,7 +26,7 @@ const Register = () => {
   const getRedirectPath = () => {
     const searchParams = new URLSearchParams(location.search);
     const redirectPath = searchParams.get("redirect");
-    return redirectPath || "/"; // Default to home if no redirect is specified
+    return redirectPath || "/";
   };
 
   const handleCreateAccount = async () => {
@@ -41,8 +41,8 @@ const Register = () => {
         keyPairSigner: wallet,
       });
 
-      // Navigate to the redirect path or default to home
-      navigate(getRedirectPath());
+      const redirectTo = getRedirectPath();
+      navigate(redirectTo);
     } catch (error) {
       console.error("Registration error:", error);
       setIsLoading(false);
@@ -61,7 +61,8 @@ const Register = () => {
         keyPairSigner: wallet,
       });
 
-      navigate(getRedirectPath());
+      const redirectTo = getRedirectPath();
+      navigate(redirectTo);
     } catch (error) {
       console.error("Login error:", error);
       setIsLoading(false);
