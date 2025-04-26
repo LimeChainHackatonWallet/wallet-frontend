@@ -14,7 +14,7 @@ import {
   getAssociatedTokenAddress,
   getAccount
 } from '@solana/spl-token';
-import { SOLANA_DEVNET_URL, TOKEN_ADDRESS } from "@/services/solana/constants";
+import { SOLANA_DEVNET_URL, TOKEN_ADDRESS, TOKEN_DECIMALS } from "@/services/solana/constants";
 
 const Dashboard = () => {
   const { user } = useAuth();
@@ -38,7 +38,7 @@ const Dashboard = () => {
       try {
         const accountInfo = await getAccount(SOLANA_DEVNET_URL, ata);
         console.log('Token balance:', Number(accountInfo.amount));
-        const amount = Number(accountInfo.amount) / 10 ** 9
+        const amount = Number(accountInfo.amount) / 10 ** (10 ** TOKEN_DECIMALS)
         const formatedAmount = Math.floor(amount*100)/100
         setBalance(formatedAmount.toString())
       } catch (err) {

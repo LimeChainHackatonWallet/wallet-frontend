@@ -7,7 +7,7 @@ import { createTransferInstruction, getAssociatedTokenAddressSync } from "@solan
 
 import nacl from "tweetnacl";
 import naclUtil from "tweetnacl-util";
-import { BACKEND_PAYER_ADDRESS, BACKEND_URL, SOLANA_DEVNET_URL, TOKEN_ADDRESS } from "@/services/solana/constants";
+import { BACKEND_PAYER_ADDRESS, BACKEND_URL, SOLANA_DEVNET_URL, TOKEN_ADDRESS, TOKEN_DECIMALS } from "@/services/solana/constants";
 
 
 type SignMethodData = {
@@ -79,7 +79,7 @@ const Pay = () => {
         new PublicKey(address),
         new PublicKey(toAddress),
         new PublicKey(user.address),
-        amount
+        amount * (10 ** TOKEN_DECIMALS)
       )
     ];
     
