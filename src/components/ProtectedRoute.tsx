@@ -1,6 +1,6 @@
 import { useAuth } from "@/context/AuthContext";
 import { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
 export default function ProtectedRoute({
   children,
@@ -9,12 +9,16 @@ export default function ProtectedRoute({
 }) {
   const { isAuthenticated } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
     if (!isAuthenticated) {
-      navigate("/register", { replace: true });
+      const currentPath = location.pathname;
+      navigate(`/register?redirect=${encodeURIComponent(currentPath)}`, {
+        replace: true,
+      });
     }
-  }, [isAuthenticated, navigate]);
+  }, [isAuthenticated, navigate, location]);
 
   return children;
 }

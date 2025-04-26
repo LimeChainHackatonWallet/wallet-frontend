@@ -16,6 +16,7 @@ import { MoonPayProvider } from '@moonpay/moonpay-react';
 // Browsers do not support WebCrypto API for ed255519 key generation
 // This provides support for it
 import { install } from '@solana/webcrypto-ed25519-polyfill';
+import Pay from './pages/Pay'
 install(); // patches WebCrypto for Ed25519 support
 
 const router = createBrowserRouter([
@@ -41,6 +42,10 @@ const router = createBrowserRouter([
             element: <Send />,
           },
         ]
+      },
+      {
+        path: "pay",
+        element: <ProtectedRoute><Pay /></ProtectedRoute>,
       },
       {
         path: 'register',

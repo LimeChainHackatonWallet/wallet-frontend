@@ -9,5 +9,16 @@
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
+    <script>
+      if ("serviceWorker" in navigator) {
+        navigator.serviceWorker
+          .getRegistration("/sw.js")
+          .then((registration) => {
+            if (!registration) {
+              navigator.serviceWorker.register("/sw.js", { scope: "/" });
+            }
+          });
+      }
+    </script>
   </body>
 </html>

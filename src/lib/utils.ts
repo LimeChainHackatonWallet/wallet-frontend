@@ -64,3 +64,14 @@ export function isValidSolanaAddress(address: string): boolean {
   const base58Regex = /^[A-HJ-NP-Za-km-z1-9]+$/;
   return base58Regex.test(address);
 }
+
+/**
+ * Converts a Uint8Array to a hexadecimal string
+ * @param bytes The Uint8Array to convert
+ * @returns The hexadecimal string representation of the Uint8Array
+ */
+export function uint8ArrayToHexString(bytes: Uint8Array): string {
+  return Array.from(bytes)
+    .map((byte) => byte.toString(16).padStart(2, "0")) // Ensure 2-digit hex
+    .join("");
+}
