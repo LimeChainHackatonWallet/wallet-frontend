@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { useEffect, useState } from "react";
 import bs58 from "bs58";
 import { VersionedTransaction, PublicKey, Connection, TransactionMessage } from "@solana/web3.js";
-import {createTransferInstruction, getAssociatedTokenAddressSync} from "@solana/spl-token";
+import { createTransferInstruction, getAssociatedTokenAddressSync } from "@solana/spl-token";
 
 import nacl from "tweetnacl";
 import naclUtil from "tweetnacl-util";
@@ -107,14 +107,12 @@ const Pay = () => {
       body: JSON.stringify({transaction: btoa(String.fromCharCode(...transactionV0.serialize()))})
     })
 
-    const data = await result.json();
-    console.log(data)
+    const { transactionHash } = await result.json();
 
     const paymentAppResponse = {
       methodName: "WalletPayment",
       details: {
-        txid: "some_txid", // TODO: broadcast?
-        message: "some message", // TODO: needed?
+        txid: transactionHash,
       },
     };
 
