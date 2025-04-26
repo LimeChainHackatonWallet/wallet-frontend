@@ -7,6 +7,7 @@ import NotFoundPage from './pages/not-found'
 import { AuthProvider } from './context/AuthContext'
 import Layout from './components/layout/Layout'
 import Buy from './pages/Buy'
+import Send from './pages/Send'
 import Dashboard from './pages/Dashboard'
 import ProtectedRoute from './components/ProtectedRoute'
 import { MoonPayProvider } from '@moonpay/moonpay-react';
@@ -29,6 +30,10 @@ const router = createBrowserRouter([
       {
         path: "buy",
         element: <ProtectedRoute><Buy /></ProtectedRoute>,
+      },
+      {
+        path: 'send',
+        element: <ProtectedRoute><Send /></ProtectedRoute>
       },
       {
         path: 'register',
