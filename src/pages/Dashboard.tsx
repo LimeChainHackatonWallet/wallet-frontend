@@ -9,11 +9,13 @@ import {
   TransactionHistory,
   Transaction,
 } from "@/components/TransactionHistory";
+import { ReceiveDialog } from "@/components/ReceiveDialog";
 
 const Dashboard = () => {
   const { user } = useAuth();
   const [balance] = useState(1250.75);
   const navigate = useNavigate();
+  const [receiveDialogOpen, setReceiveDialogOpen] = useState(false);
   const [transactions] = useState<Transaction[]>([
     {
       id: 1,
@@ -62,7 +64,7 @@ const Dashboard = () => {
         <Button
           variant="outline"
           className="flex flex-col items-center justify-center gap-2 p-4 h-20"
-          onClick={() => navigate("/receive")}
+          onClick={() => setReceiveDialogOpen(true)}
           aria-label="Receive money"
         >
           <ArrowDown className="h-5 w-5" />
@@ -80,6 +82,11 @@ const Dashboard = () => {
       </div>
 
       <TransactionHistory transactions={transactions} />
+
+      <ReceiveDialog
+        open={receiveDialogOpen}
+        onOpenChange={setReceiveDialogOpen}
+      />
     </div>
   );
 };

@@ -16,6 +16,7 @@ import {
 } from "@/components/ui/form";
 import { Card, CardContent } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
+import { useEffect } from "react";
 
 // Define the form schema with validation
 const sendFormSchema = z.object({
@@ -43,17 +44,30 @@ export type SendFormValues = z.infer<typeof sendFormSchema>;
 type SendFormProps = {
   onSubmit: (data: SendFormValues) => void;
   isSubmitting: boolean;
+  initialAddress?: string;
 };
 
-export function SendForm({ onSubmit, isSubmitting }: SendFormProps) {
+export function SendForm({
+  onSubmit,
+  isSubmitting,
+  initialAddress,
+}: SendFormProps) {
   const form = useForm<SendFormValues>({
     resolver: zodResolver(sendFormSchema),
     defaultValues: {
-      recipientAddress: "",
+      recipientAddress: initialAddress || "",
       amount: "",
     },
     mode: "onChange",
   });
+
+  // When initialAddress changes, update the form value
+  useEffect(() => {
+    if (initialAddress) {
+      form.setValue("recipientAddress", initialAddress);
+      form.trigger("recipientAddress");
+    }
+  }, [initialAddress, form]);
 
   return (
     <Card className="overflow-hidden border-none shadow-md">

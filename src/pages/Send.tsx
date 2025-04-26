@@ -1,16 +1,28 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useAuth } from "@/context/AuthContext";
 import { ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { SendForm, SendFormValues } from "@/components/forms/send-form";
 import { TransactionDialog } from "@/components/ui/transaction-dialog";
 
 export default function Send() {
   const navigate = useNavigate();
+  const location = useLocation();
   const { user } = useAuth();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [transactionDialog, setTransactionDialog] = useState(false);
+  const [initialAddress, setInitialAddress] = useState<string>("");
+
+  // Extract the address from the URL parameters if present
+  useEffect(() => {
+    const searchParams = new URLSearchParams(location.search);
+    const addressParam = searchParams.get("address");
+
+    if (addressParam) {
+      setInitialAddress(addressParam);
+    }
+  }, [location]);
 
   if (!user) {
     return <div>Loading...</div>;
@@ -48,7 +60,11 @@ export default function Send() {
         <h1 className="ml-4 text-xl font-bold">Send Crypto</h1>
       </div>
 
-      <SendForm onSubmit={handleSubmit} isSubmitting={isSubmitting} />
+      <SendForm
+        onSubmit={handleSubmit}
+        isSubmitting={isSubmitting}
+        initialAddress={initialAddress}
+      />
 
       <TransactionDialog
         open={transactionDialog}
