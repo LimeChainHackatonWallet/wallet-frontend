@@ -2,15 +2,12 @@ import { useAuth } from "@/context/AuthContext";
 import { Button } from "@/components/ui/button";
 import { useEffect, useState } from "react";
 import bs58 from "bs58";
-import { VersionedTransaction, PublicKey, Connection, TransactionMessage } from "@solana/web3.js";
+import { VersionedTransaction, PublicKey, TransactionMessage } from "@solana/web3.js";
 import { createTransferInstruction, getAssociatedTokenAddressSync } from "@solana/spl-token";
 
 import nacl from "tweetnacl";
 import naclUtil from "tweetnacl-util";
-
-const BACKEND_URL = "http://localhost:3000"
-const BACKEND_PAYER_ADDRESS = "2GesLoaCkAAfHF5iSgNDwgz9eSuRQv99gWknCqV5uk69"
-const TOKEN_ADDRESS = "BZSyBGAzgER4LsQioSXvHxvPA9yPseNqnLX275LJQHKX"
+import { BACKEND_PAYER_ADDRESS, BACKEND_URL, SOLANA_DEVNET_URL, TOKEN_ADDRESS, TOKEN_DECIMALS } from "@/services/solana/constants";
 
 
 type SignMethodData = {
@@ -71,8 +68,7 @@ const Pay = () => {
     }
 
     // TODO: use backend for getting the latestBlockHash?
-    const connection = new Connection("https://api.devnet.solana.com", "confirmed");
-    const blockhash = (await connection.getLatestBlockhash()).blockhash;
+    const blockhash = (await SOLANA_DEVNET_URL.getLatestBlockhash()).blockhash;
 
     // create array of instructions
     // TODO: add additional transfer for the backend
@@ -83,7 +79,7 @@ const Pay = () => {
         new PublicKey(address),
         new PublicKey(toAddress),
         new PublicKey(user.address),
-        amount
+        amount * (10 ** TOKEN_DECIMALS)
       )
     ];
     
