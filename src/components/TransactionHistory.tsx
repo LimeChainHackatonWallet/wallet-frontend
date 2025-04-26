@@ -1,9 +1,10 @@
 import { ArrowDown, Clock, Send } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { formatCurrency } from "@/lib/utils";
+import { formatAddress } from "@/lib/utils";
+import { TOKEN_DECIMALS } from "@/services/solana/constants";
 
 export type Transaction = {
-  id: number;
+  id: string;
   type: "sent" | "received";
   amount: number;
   address: string;
@@ -17,6 +18,12 @@ type TransactionHistoryProps = {
 export const TransactionHistory = ({
   transactions,
 }: TransactionHistoryProps) => {
+
+  function formatAmount(amount: number) {
+    const numberAmount = Number(amount) / (10 ** TOKEN_DECIMALS)
+    const formatedAmount = Math.floor(numberAmount*100)/100
+    return formatedAmount.toFixed(2)
+  }
   return (
     <Card>
       <CardHeader>
@@ -53,8 +60,8 @@ export const TransactionHistory = ({
                     </p>
                     <p className="text-xs text-muted-foreground">
                       {tx.type === "received"
-                        ? `From ${tx.address}`
-                        : `To ${tx.address}`}
+                        ? `From ${formatAddress(tx.address)}`
+                        : `To ${formatAddress(tx.address)}`}
                     </p>
                   </div>
                 </div>
@@ -65,7 +72,7 @@ export const TransactionHistory = ({
                     }`}
                   >
                     {tx.type === "received" ? "+" : "-"}
-                    {formatCurrency(tx.amount)}
+                    ${formatAmount(tx.amount)}
                   </p>
                   <p className="text-xs text-muted-foreground">{tx.date}</p>
                 </div>

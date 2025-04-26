@@ -36,7 +36,7 @@ type PaymentData = {
 };
 
 const Pay = () => {
-  const { user } = useAuth();
+  const { user, addTransaction } = useAuth();
   const [paymentData, setPaymentData] = useState<PaymentData | null>(null);
 
   async function sign(message: string) {
@@ -105,6 +105,10 @@ const Pay = () => {
     })
 
     const { transactionHash } = await result.json();
+
+    if (transactionHash) {
+      addTransaction(transactionHash, amount * (10 ** TOKEN_DECIMALS), to)
+    }
 
     const paymentAppResponse = {
       methodName: "WalletPayment",
