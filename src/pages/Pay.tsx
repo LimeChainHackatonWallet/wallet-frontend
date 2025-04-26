@@ -7,7 +7,6 @@ import {createTransferInstruction, getAssociatedTokenAddressSync} from "@solana/
 
 import nacl from "tweetnacl";
 import naclUtil from "tweetnacl-util";
-import instructionCreate from "@/utils/instructionCreate";
 
 const BACKEND_URL = "http://localhost:3000"
 const BACKEND_PAYER_ADDRESS = "2GesLoaCkAAfHF5iSgNDwgz9eSuRQv99gWknCqV5uk69"

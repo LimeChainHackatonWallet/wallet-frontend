@@ -1,5 +1,5 @@
-import { getOrCreateAssociatedTokenAccount, createTransferInstruction, getAssociatedTokenAddressSync } from "@solana/spl-token";
-import { Connection, Keypair, ParsedAccountData, PublicKey, sendAndConfirmRawTransaction, Transaction, TransactionInstruction, TransactionMessage, VersionedTransaction } from "@solana/web3.js";
+import { createTransferInstruction, getAssociatedTokenAddressSync } from "@solana/spl-token";
+import { PublicKey, TransactionMessage, VersionedTransaction } from "@solana/web3.js";
 import { MINTED_TOKEN_ADDRESS, SOLANA_DEVNET_URL, BACKEND_PAYER_ADDRESS, BACKEND_URL } from "./constants";
 
 // spl-token create-account <token_mint_addres> --owner <owner_of_this_ata> --fee-payer <wallet_that_is_paying_the_fee_for_creating_the_ata_ => Use_wallet_path_if_locally>

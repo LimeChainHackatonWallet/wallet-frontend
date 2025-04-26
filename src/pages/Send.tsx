@@ -6,9 +6,6 @@ import { useNavigate, useLocation, Navigate } from "react-router-dom";
 import { SendForm, SendFormValues } from "@/components/forms/send-form";
 import { TransactionDialog } from "@/components/ui/transaction-dialog";
 import transferTokens from "@/services/solana/transfer_tokens";
-import { PublicKey } from "@solana/web3.js";
-import Pay from "./Pay";
-import instructionCreate from "@/utils/instructionCreate";
 
 const ADDRESS_STORAGE_KEY = "pendingRecipientAddress";
 
@@ -75,7 +72,7 @@ export default function Send() {
     console.log("Form submitted with data:", data);
 
     // Create the transaction instruction with the signatures and send to backend
-    transferTokens(user, data.recipientAddress, data.amount);
+    transferTokens(user, data.recipientAddress, Number(data.amount));
 
     setTimeout(() => {
       setIsSubmitting(false);
