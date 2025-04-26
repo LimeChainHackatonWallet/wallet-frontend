@@ -48,17 +48,5 @@ export default async function pay(to: string, amount: number, user: any) {
     body: JSON.stringify({transaction: btoa(String.fromCharCode(...transactionV0.serialize()))})
   })
 
-  const { transactionHash } = await result.json();
-
-  const paymentAppResponse = {
-    methodName: "WalletPayment",
-    details: {
-      txid: transactionHash,
-    },
-  };
-
-  if (navigator.serviceWorker.controller) {
-    navigator.serviceWorker.controller.postMessage(paymentAppResponse);
-  }
-  window.close();
+  return result;
 }

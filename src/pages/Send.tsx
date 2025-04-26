@@ -74,8 +74,8 @@ export default function Send() {
     setTransactionDialog(true);
     console.log("Form submitted with data:", data);
 
-    // Mock transaction processing - would be replaced with actual transaction logic
-    transferTokens(user.address, data.recipientAddress, data.amount);
+    // Create the transaction instruction with the signatures and send to backend
+    transferTokens(user, data.recipientAddress, data.amount);
 
     setTimeout(() => {
       setIsSubmitting(false);
