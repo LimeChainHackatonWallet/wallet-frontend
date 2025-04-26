@@ -19,14 +19,18 @@ const Header = () => {
     <div className="flex justify-between items-center mb-6">
       <div className="flex items-center gap-3">
         <Avatar className="h-10 w-10 border border-primary/20">
-          <AvatarImage src={`https://avatar.vercel.sh/${user?.address}`} />
+          <AvatarImage
+            src={`https://avatar.vercel.sh/${user?.keyPairSigner?.address}`}
+          />
           <AvatarFallback className="bg-primary/10 text-primary">
-            {user?.address?.substring(0, 2).toUpperCase() || "U"}
+            {user?.keyPairSigner?.address?.substring(0, 2).toUpperCase() || "U"}
           </AvatarFallback>
         </Avatar>
         <div>
           <p className="font-medium">Account:</p>
-          <h2 className="text-xl font-bold">{formatAddress(user.address)}</h2>
+          <h2 className="text-xl font-bold">
+            {formatAddress(user.keyPairSigner.address)}
+          </h2>
         </div>
       </div>
       <Button variant="outline" size="icon" onClick={handleLogout}>
