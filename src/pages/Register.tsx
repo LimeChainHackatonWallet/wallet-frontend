@@ -46,6 +46,7 @@ const Register = () => {
       navigate(redirectTo);
     } catch (error) {
       console.error("Registration error:", error);
+    } finally {
       setIsLoading(false);
     }
   };
@@ -67,6 +68,7 @@ const Register = () => {
       navigate(redirectTo);
     } catch (error) {
       console.error("Login error:", error);
+    } finally {
       setIsLoading(false);
     }
   };
